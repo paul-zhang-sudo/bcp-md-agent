@@ -27,7 +27,6 @@ public class AgApiProxyService extends FwService {
     public List<AgApiProxy> findAllEnable(){
         AgApiProxy example = new AgApiProxy();
         example.setEnable(true);
-        example.setDelFlag(false);
         return agApiProxyRepository.findAll(Example.of(example));
     }
 }

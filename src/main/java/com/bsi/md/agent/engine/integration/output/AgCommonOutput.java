@@ -23,4 +23,9 @@ public class AgCommonOutput implements AgOutput{
         }
         return result;
     }
+
+    @Override
+    public String setScript(String script) {
+        return this.script = script;
+    }
 }

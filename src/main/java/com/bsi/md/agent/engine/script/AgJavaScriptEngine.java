@@ -72,10 +72,10 @@ public class AgJavaScriptEngine implements AgScriptEngine{
 
     public static void main(String[] arr) throws Exception{
 
-        String script = "importClass(com.bsi.utils.SqlUtils);\n" +
+        String script = "importClass(com.bsi.utils.DBUtils);\n" +
                 "\n" +
                 "function execute(){\n" +
-                "   return SqlUtils.execute(\"INSERT INTO price(materialCode,materialName,amount) VALUES('999','999',99.99);update price set materialName = '光11111' WHERE id=1;\");\n" +
+                "   return DBUtils.execute(\"INSERT INTO price(materialCode,materialName,amount) VALUES('999','999',99.99);update price set materialName = '光11111' WHERE id=1;\");\n" +
                 "}";
         System.out.println( JSON.toJSONString( AgJavaScriptEngine.getInstance().execute(script,"execute") ) );
     }

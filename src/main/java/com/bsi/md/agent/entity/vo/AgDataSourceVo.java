@@ -1,13 +1,17 @@
 package com.bsi.md.agent.entity.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 数据源vo
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AgDataSourceVo {
     //名称
     private String name;

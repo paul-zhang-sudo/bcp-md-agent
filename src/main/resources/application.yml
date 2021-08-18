@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: datasource:sqlite:/Users/fish/bs_project/md-api-engine/src/main/resources/bcp-demo.db?date_string_format=yyyy-MM-dd HH:mm:ss
+    url: jdbc:sqlite:/Users/fish/bs_project/md-agent/src/main/resources/bcp.db?date_string_format=yyyy-MM-dd HH:mm:ss
     driverClassName: org.sqlite.JDBC
     initialSize: 3
     minIdle: 3
@@ -26,7 +26,7 @@ spring:
   jpa:
     database-platform: com.bsi.framework.core.sqlite.SQLiteDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true

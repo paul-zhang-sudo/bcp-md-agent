@@ -13,4 +13,11 @@ public interface AgInput {
      * @return
      */
     Object read(Context context);
+
+    /**
+     * 设置执行脚本
+     * @param script
+     * @return
+     */
+    String setScript(String script);
 }

@@ -1,6 +1,5 @@
 package com.bsi.md.agent.entity.vo;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Map;
@@ -10,13 +9,12 @@ import java.util.Map;
  * @author fish
  */
 @Data
-@Builder
 public class AgIntegrationConfigVo {
     //配置id
-    private Long configId;
+    private Integer configId;
 
     //任务id
-    private Long taskId;
+    private Integer taskId;
     //任务参数配置
     private Map<String,Object> paramMap;
 

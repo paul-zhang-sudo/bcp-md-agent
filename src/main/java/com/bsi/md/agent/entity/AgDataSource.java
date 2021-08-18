@@ -1,8 +1,8 @@
 package com.bsi.md.agent.entity;
 
-import com.bsi.framework.core.entity.AbstractPageEntity;
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -12,18 +12,15 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name="md_agent_datasource")
-public class AgDataSource extends AbstractPageEntity {
+public class AgDataSource extends AgAbstractEntity {
     //名称
     private String name;
     //类型
     private String type;
     //分类
     private String classify;
-    //备注
-    private String remark;
-    //节点id
-    private String nodeId;
     //配置数据json串
+    @Column(name = "configValue",columnDefinition="ntext")
     private String configValue;
 
 }

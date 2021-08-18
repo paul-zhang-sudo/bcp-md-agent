@@ -8,16 +8,30 @@ import java.util.Map;
  * @author fish
  */
 public class AgDatasourceContainer {
-    private static Map<Long,AgJdbcTemplate> jdbcMap = new HashMap<>();
-    private static Map<Long, AgApiTemplate> apiMap = new HashMap<>();
+    private static Map<Integer,AgJdbcTemplate> jdbcMap = new HashMap<>();
+    private static Map<Integer, AgApiTemplate> apiMap = new HashMap<>();
 
     /**
      * 添加一个jdbc数据源
      * @param key
      * @param template
      */
-    public static void addJdbcDataSource(Long key,AgJdbcTemplate template){
+    public static void addJdbcDataSource(Integer key,AgJdbcTemplate template){
         jdbcMap.put(key,template);
+    }
+
+    /**
+     * 清空jdbc数据源map
+     */
+    public static void clearJdbcDataSource(){
+        jdbcMap.clear();
+    }
+
+    /**
+     * 清空api数据源map
+     */
+    public static void clearApiataSource(){
+        apiMap.clear();
     }
 
     /**
@@ -25,7 +39,7 @@ public class AgDatasourceContainer {
      * @param key
      * @return
      */
-    public static AgJdbcTemplate getJdbcDataSource(Long key){
+    public static AgJdbcTemplate getJdbcDataSource(Integer key){
         return jdbcMap.get(key);
     }
 
@@ -34,7 +48,7 @@ public class AgDatasourceContainer {
      * @param key
      * @param template
      */
-    public static void addApiDataSource(Long key,AgApiTemplate template){
+    public static void addApiDataSource(Integer key,AgApiTemplate template){
         apiMap.put(key,template);
     }
 
@@ -43,7 +57,7 @@ public class AgDatasourceContainer {
      * @param key
      * @return
      */
-    public static AgApiTemplate getApiDataSource(Long key){
+    public static AgApiTemplate getApiDataSource(Integer key){
         return apiMap.get(key);
     }
 }

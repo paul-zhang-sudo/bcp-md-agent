@@ -1,6 +1,5 @@
 package com.bsi.md.agent.entity;
 
-import com.bsi.framework.core.entity.AbstractPageEntity;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -13,11 +12,11 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name="md_agent_job_param")
-public class AgJobParam extends AbstractPageEntity {
+public class AgJobParam extends AgAbstractEntity {
     //系统名称
     private String name;
     //任务id
-    private Long jobId;
+    private Integer jobId;
     //最后执行时间
     private Date lastRunTime;
     //最后执行标志

@@ -1,6 +1,5 @@
 package com.bsi.md.agent.entity;
 
-import com.bsi.framework.core.entity.AbstractPageEntity;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -12,9 +11,9 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name="md_agent_api_proxy")
-public class AgApiProxy extends AbstractPageEntity {
+public class AgApiProxy extends AgAbstractEntity {
     //所属配置id
-    private Long configId;
+    private Integer configId;
     //名称
     private String name;
 }

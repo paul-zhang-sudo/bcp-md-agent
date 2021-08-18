@@ -9,6 +9,7 @@ import com.bsi.md.agent.datasource.AgApiTemplate;
 import com.bsi.md.agent.entity.AgDataSource;
 import com.bsi.md.agent.datasource.AgJdbcTemplate;
 import com.bsi.md.agent.datasource.AgDatasourceContainer;
+import com.bsi.md.agent.entity.dto.AgDataSourceDto;
 import com.bsi.md.agent.repository.AgDataSourceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,13 @@ public class AgDataSourceService extends FwService {
 
     public boolean refreshDataSource(){
         Boolean flag = true;
+        int size = 0;
         try {
             List<AgDataSource> list = findAll();
-
+            AgDatasourceContainer.clearApiataSource();
+            AgDatasourceContainer.clearJdbcDataSource();
             if( CollectionUtils.isNotEmpty(list) ){
+                size = list.size();
                 for(AgDataSource ds:list){
                     JSONObject config = JSONObject.parseObject( ds.getConfigValue() );
                     //api类型数据源处理
@@ -51,13 +55,30 @@ public class AgDataSourceService extends FwService {
                         template.setDataSource(config.getString("driverClassName"),config.getString("url"),config.getString("username"),config.getString("password"));
                         AgDatasourceContainer.addJdbcDataSource(ds.getId(),template);
                     }
-
                 }
             }
         }catch (Exception e){
             log.error("刷新数据源报错:{}", ExceptionUtils.getFullStackTrace(e));
             flag = false;
         }
+        log.info("一共初始化{}条数据源信息",size);
         return flag;
+    }
+
+    /**
+     * 更新数据源
+     * @param ds
+     */
+    public void updateDS(AgDataSourceDto ds){
+        AgDataSource dataSource = new AgDataSource();
+        dataSource.setId( ds.getId() );
+        dataSource.setClassify( ds.getClassify() );
+        dataSource.setType( ds.getType() );
+        dataSource.setName( ds.getName() );
+        dataSource.setConfigValue( ds.getConfigValue() );
+        dataSource.setEnable( true );
+        agDataSourceRepository.save(dataSource);
+        //刷新缓存
+        refreshDataSource();
     }
 }

@@ -24,4 +24,9 @@ public class AgCommonInput implements AgInput{
         }
         return result;
     }
+
+    @Override
+    public String setScript(String script) {
+        return this.script = script;
+    }
 }

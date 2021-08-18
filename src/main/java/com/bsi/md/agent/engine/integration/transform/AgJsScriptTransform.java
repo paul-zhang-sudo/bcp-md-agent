@@ -28,4 +28,9 @@ public class AgJsScriptTransform implements AgTransform{
         }
         return result;
     }
+
+    @Override
+    public String setScript(String script) {
+        return this.script = script;
+    }
 }

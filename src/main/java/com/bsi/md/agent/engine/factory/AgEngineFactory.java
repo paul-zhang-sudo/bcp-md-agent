@@ -29,9 +29,14 @@ public class AgEngineFactory {
         AgNodeVo transformNode = config.getTransformNode();
 
         try{
-            AgInput input = (AgInput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.input"+inputNode.getClassName()).newInstance();
-            AgTransform transform = (AgTransform) ClassUtils.getClass("com.bsi.md.agent.engine.integration.transform"+transformNode.getClassName()).newInstance();
-            AgOutput output = (AgOutput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.output"+outputNode.getClassName()).newInstance();
+            AgInput input = (AgInput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.input."+inputNode.getClassName()).newInstance();
+            input.setScript( inputNode.getScript() );
+
+            AgTransform transform = (AgTransform) ClassUtils.getClass("com.bsi.md.agent.engine.integration.transform."+transformNode.getClassName()).newInstance();
+            transform.setScript( transformNode.getScript() );
+
+            AgOutput output = (AgOutput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.output."+outputNode.getClassName()).newInstance();
+            output.setScript( outputNode.getScript() );
 
             engine.setInput(input);
             engine.setTransform(transform);

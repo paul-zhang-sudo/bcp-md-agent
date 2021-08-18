@@ -1,9 +1,11 @@
 package com.bsi.md.agent.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.schedule.FwScheduleUtils;
 import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;
+import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.entity.AgApiProxy;
 import com.bsi.md.agent.entity.AgConfig;
@@ -44,15 +46,16 @@ public class AgJobService extends FwService {
     public List<AgJob> findAllEnable() {
         AgJob example = new AgJob();
         example.setEnable(true);
-        example.setDelFlag(false);
         return agJobRepository.findAll(Example.of(example));
     }
 
     public Boolean refreshJob() {
         Boolean flag=true;
+        int jobSize = 0;
+        int apiSize = 0;
         try{
             //1、读取系统中所有的数据源、集成配置、任务
-            Map<Long, AgConfig> agConfigMap = new HashMap<>();
+            Map<Integer, AgConfig> agConfigMap = new HashMap<>();
             List<AgConfig> configList = agConfigService.findAll();
             if (CollectionUtils.isNotEmpty(configList)) {
                 agConfigMap = configList.stream().collect(Collectors.toMap(AgConfig::getId, Function.identity()));
@@ -62,18 +65,21 @@ public class AgJobService extends FwService {
 
             //3、定时任务初始化
             if (CollectionUtils.isNotEmpty(jobList)) {
+                jobSize = jobList.size();
                 List<AgTaskRun> taskList = new ArrayList<>();
                 for (AgJob job : jobList) {
                     //配置初始化到缓存中
-                    AgIntegrationConfigVo vo = AgIntegrationConfigVo.builder().build();
+                    AgIntegrationConfigVo vo = new AgIntegrationConfigVo();
                     AgConfig agConfig = agConfigMap.get(job.getConfigId());
                     vo.setTaskId(job.getId());
                     vo.setConfigId(job.getConfigId());
-                    JSONObject conf = JSONObject.parseObject(agConfig.getConfigValue());
+                    JSONObject conf = JSONObject.parseObject(job.getConfigValue());
                     JSONObject inputNodeConfig = conf.getJSONObject("inputNodeConfig");
                     JSONObject transformNodeConfig = conf.getJSONObject("transformNodeConfig");
                     JSONObject outputNodeConfig = conf.getJSONObject("outputNodeConfig");
-                    JSONObject configParam = conf.getJSONObject("configParam");
+
+                    JSONObject globalConf = JSONObject.parseObject( agConfig.getConfigValue() );
+                    JSONObject configParam = globalConf.getJSONObject("config");
 
                     AgNodeVo inputNode = getAgNodeVo(inputNodeConfig);
                     AgNodeVo outputNode = getAgNodeVo(outputNodeConfig);
@@ -84,6 +90,8 @@ public class AgJobService extends FwService {
                     vo.setTransformNode(transformNode);
                     vo.setParamMap(configParam.getInnerMap());
 
+                    //初始化配置到缓存
+                    EHCacheUtil.put( job.getId().toString(), JSON.toJSONString(vo) );
                     //初始化计划任务
                     AgTaskRun agTaskRun = new AgTaskRun();
                     agTaskRun.setCron(job.getCron());
@@ -105,6 +113,7 @@ public class AgJobService extends FwService {
             log.error("刷新计划任务缓存失败:{}"+ ExceptionUtils.getFullStackTrace(e));
             flag=false;
         }
+        log.info("一共初始化{}条定时任务,{}个实时接口",jobSize,apiSize);
         return flag;
     }
 

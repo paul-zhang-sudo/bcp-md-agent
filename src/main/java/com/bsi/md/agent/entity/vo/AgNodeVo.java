@@ -3,6 +3,7 @@ package com.bsi.md.agent.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 节点
@@ -10,6 +11,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AgNodeVo {
     //节点类型
     private String type;

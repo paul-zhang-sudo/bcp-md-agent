@@ -13,4 +13,11 @@ public interface AgTransform {
      * @return
      */
     Object transform(Context context);
+
+    /**
+     * 设置执行脚本
+     * @param script
+     * @return
+     */
+    String setScript(String script);
 }

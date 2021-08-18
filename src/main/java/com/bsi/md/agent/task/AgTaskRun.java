@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.schedule.FwTask;
 import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
-import com.bsi.md.agent.constant.AgConstant;
 import com.bsi.md.agent.engine.factory.AgEngineFactory;
 import com.bsi.md.agent.engine.integration.AgIntegrationEngine;
 import com.bsi.md.agent.engine.integration.AgTaskBootStrap;
@@ -35,9 +34,9 @@ public class AgTaskRun extends FwTask {
         try{
             //配置日志参数，不同日志输出到不同文件
             MDC.put("taskId", taskId);
-            log.info("====计划任务开始执行,计划任务名称:{}，编码:{},用户场景id:{}====",name,taskId);
+            log.info("====计划任务开始执行,计划任务名称:{}，编码:{}====",name,taskId);
             //1、获取到执行规则
-            AgIntegrationConfigVo config = EHCacheUtil.get(AgConstant.AG_TASK_CONFIG,AgIntegrationConfigVo.class);
+            AgIntegrationConfigVo config = EHCacheUtil.get(taskId,AgIntegrationConfigVo.class);
             //2、调用集成引擎解析规则
             AgIntegrationEngine engine = AgEngineFactory.getJobEngine(config);
             Context context = new Context();
