@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:sqlite:/Users/fish/bs_project/md-agent/src/main/resources/bcp.db?date_string_format=yyyy-MM-dd HH:mm:ss
+    url: jdbc:sqlite:/db/bcp.db?date_string_format=yyyy-MM-dd HH:mm:ss
     driverClassName: org.sqlite.JDBC
     initialSize: 3
     minIdle: 3
