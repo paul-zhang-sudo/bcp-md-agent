@@ -31,4 +31,15 @@ public class DateUtils {
         DateTimeFormatter df = DateTimeFormatter.ofPattern(pattern);
         return df.format( LocalDateTime.now().minusMinutes(minute));
     }
+
+    /**
+     * 获取当前日期多少秒之前的日期，为负数可以获取多少秒之后的数据
+     * @param pattern
+     * @param minute
+     * @return String
+     */
+    public static String preSecondsForNow(Long minute,String pattern){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern(pattern);
+        return df.format( LocalDateTime.now().minusSeconds(minute));
+    }
 }
