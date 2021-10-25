@@ -205,7 +205,7 @@
                     <!--日志文档保留天数-->
                     <maxHistory>60</maxHistory>
                     <!--日志文件最大占用空间-->
-                    <totalSizeCap>2GB</totalSizeCap>
+                    <totalSizeCap>20GB</totalSizeCap>
                 </rollingPolicy>
                 <!-- 正在记录的日志文档的路径及文档名 -->
                 <file>${log.path}/task/task-${taskId}.log</file>
