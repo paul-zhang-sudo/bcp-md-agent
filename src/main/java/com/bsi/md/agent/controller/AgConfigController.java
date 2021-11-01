@@ -6,7 +6,9 @@ import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.vo.resp.FwHttpStatus;
 import com.bsi.framework.core.vo.resp.Resp;
 import com.bsi.md.agent.entity.dto.AgConfigDto;
+import com.bsi.md.agent.entity.dto.AgConfigDtoForIOT;
 import com.bsi.md.agent.entity.dto.AgDataSourceDto;
+import com.bsi.md.agent.entity.dto.AgDataSourceDtoForIOT;
 import com.bsi.md.agent.service.AgConfigService;
 import com.bsi.md.agent.service.AgDataSourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +50,46 @@ public class AgConfigController {
             return rs;
         }
         return updateConfig(config);
+    }
+
+    /**
+     * 更新集成配置
+     * @param request
+     * @param config
+     * @throws Exception
+     */
+    @PostMapping("/iot/integration/config")
+    public Resp updateConfigForIot(HttpServletRequest request, @RequestBody AgConfigDtoForIOT config) throws Exception{
+        log.info( "收到IoT Edge控制台下发的配置信息:{}", JSON.toJSONString( config ) );
+        //IOT验签
+//        Resp rs = verify(request);
+//        if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
+//            return rs;
+//        }
+//        return updateConfig(config);
+        Resp rs = new Resp();
+        rs.setMsg("下发成功");
+        return rs;
+    }
+
+    /**
+     * 更新数据源
+     * @param request
+     * @param dataSource
+     * @throws Exception
+     */
+    @PostMapping("/iot/integration/datasource")
+    public Resp updateDataSourceForIot(HttpServletRequest request,@RequestBody AgDataSourceDtoForIOT dataSource) throws Exception{
+        log.info( "收到IoT Edge控制台下发的数据源信息:{}", JSON.toJSONString( dataSource ) );
+        //IOT验签
+//        Resp rs = verify(request);
+//        if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
+//            return rs;
+//        }
+//        return updateDataSource(dataSource);
+        Resp rs = new Resp();
+        rs.setMsg("下发成功");
+        return rs;
     }
 
     /**

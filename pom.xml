@@ -23,8 +23,19 @@
             <groupId>com.bsi.framework</groupId>
             <artifactId>core</artifactId>
             <version>1.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.huawei.iot</groupId>
+                    <artifactId>iot-module-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
+        <!-- iot工具类 -->
+        <dependency>
+            <groupId>com.huawei.iot</groupId>
+            <artifactId>iot-module-client</artifactId>
+            <version>2.1.2</version>
+        </dependency>
         <!-- xml、json转换 -->
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
