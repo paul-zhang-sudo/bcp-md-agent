@@ -16,8 +16,6 @@ import java.io.Serializable;
 @MappedSuperclass
 public class AgAbstractEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "fwId")
-    @GenericGenerator(name = "fwId", strategy = "com.bsi.framework.core.idgenerator.FwIdGenerator")
-    private Integer id;
+    private String id;
     private Boolean enable;
 }

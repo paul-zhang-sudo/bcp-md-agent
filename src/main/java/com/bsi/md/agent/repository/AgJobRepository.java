@@ -10,5 +10,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface AgJobRepository extends JpaRepository<AgJob, Long> {
 
-    Integer deleteByConfigId(Integer configId);
+    Integer deleteByConfigId(String configId);
 }

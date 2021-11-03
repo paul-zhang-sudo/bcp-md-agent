@@ -7,6 +7,7 @@ import com.bsi.framework.core.utils.DateUtils;
 import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.FwSpringContextUtil;
+import com.bsi.md.agent.constant.AgConstant;
 import com.bsi.md.agent.datasource.AgApiTemplate;
 import com.bsi.md.agent.datasource.AgDatasourceContainer;
 import com.bsi.md.agent.engine.factory.AgEngineFactory;
@@ -46,7 +47,7 @@ public class AgTaskRun extends FwTask {
             MDC.put("taskId", name+"-"+taskId);
             log.info("====计划任务开始执行,计划任务名称:{}，编码:{}====",name,taskId);
             //1、获取到执行规则
-            AgIntegrationConfigVo config = EHCacheUtil.get(taskId,AgIntegrationConfigVo.class);
+            AgIntegrationConfigVo config = JSON.parseObject( EHCacheUtil.getValue(AgConstant.AG_EHCACHE_JOB,taskId).toString(),AgIntegrationConfigVo.class);
             //2、调用集成引擎解析规则
             AgIntegrationEngine engine = AgEngineFactory.getJobEngine(config);
             Context context = new Context();
@@ -62,7 +63,7 @@ public class AgTaskRun extends FwTask {
         }catch (Exception e){
             result = "failure";
             error = ExceptionUtils.getFullStackTrace( e );
-            log.error( "错误日志id:{},计划任务:{},执行失败,日志id:{},失败信息:{}", errorId , taskId ,error );
+            log.error( "错误日志id:{},计划任务:{},执行失败,失败信息:{}", errorId , taskId ,error );
         }finally {
             log.info( "====计划任务:{},执行结束,执行结果:{}====", taskId , result );
             MDC.remove("taskId");
@@ -100,7 +101,7 @@ public class AgTaskRun extends FwTask {
     }
 
     private void setRealpath(JSONObject obj){
-        AgApiTemplate a = AgDatasourceContainer.getApiDataSource(obj.getInteger("dataSource"));
+        AgApiTemplate a = AgDatasourceContainer.getApiDataSource(obj.getString("dataSource"));
         if(a!=null){
             obj.put("path",a.getApiUrl()+obj.getString("path"));
             obj.put("host",a.getApiUrl());

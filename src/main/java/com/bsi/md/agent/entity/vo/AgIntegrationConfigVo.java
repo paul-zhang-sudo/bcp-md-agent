@@ -12,10 +12,10 @@ import java.util.Map;
 @Data
 public class AgIntegrationConfigVo {
     //配置id
-    private Integer configId;
+    private String configId;
 
     //任务id
-    private Integer taskId;
+    private String taskId;
     //任务参数配置
     private Map<String,Object> paramMap;
 

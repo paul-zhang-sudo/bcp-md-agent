@@ -8,15 +8,15 @@ import java.util.Map;
  * @author fish
  */
 public class AgDatasourceContainer {
-    private static Map<Integer,AgJdbcTemplate> jdbcMap = new HashMap<>();
-    private static Map<Integer, AgApiTemplate> apiMap = new HashMap<>();
+    private static Map<String,AgJdbcTemplate> jdbcMap = new HashMap<>();
+    private static Map<String, AgApiTemplate> apiMap = new HashMap<>();
 
     /**
      * 添加一个jdbc数据源
      * @param key
      * @param template
      */
-    public static void addJdbcDataSource(Integer key,AgJdbcTemplate template){
+    public static void addJdbcDataSource(String key,AgJdbcTemplate template){
         jdbcMap.put(key,template);
     }
 
@@ -48,7 +48,7 @@ public class AgDatasourceContainer {
      * @param key
      * @param template
      */
-    public static void addApiDataSource(Integer key,AgApiTemplate template){
+    public static void addApiDataSource(String key,AgApiTemplate template){
         apiMap.put(key,template);
     }
 
@@ -57,7 +57,7 @@ public class AgDatasourceContainer {
      * @param key
      * @return
      */
-    public static AgApiTemplate getApiDataSource(Integer key){
+    public static AgApiTemplate getApiDataSource(String key){
         return apiMap.get(key);
     }
 }

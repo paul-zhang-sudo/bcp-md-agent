@@ -7,6 +7,7 @@ import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;
 import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
+import com.bsi.md.agent.constant.AgConstant;
 import com.bsi.md.agent.entity.AgApiProxy;
 import com.bsi.md.agent.entity.AgConfig;
 import com.bsi.md.agent.entity.AgJob;
@@ -55,7 +56,7 @@ public class AgJobService extends FwService {
         int apiSize = 0;
         try{
             //1、读取系统中所有的数据源、集成配置、任务
-            Map<Integer, AgConfig> agConfigMap = new HashMap<>();
+            Map<String, AgConfig> agConfigMap = new HashMap<>();
             List<AgConfig> configList = agConfigService.findAll();
             if (CollectionUtils.isNotEmpty(configList)) {
                 agConfigMap = configList.stream().collect(Collectors.toMap(AgConfig::getId, Function.identity()));
@@ -90,7 +91,8 @@ public class AgJobService extends FwService {
                     vo.setParamMap(configParam.getInnerMap());
 
                     //初始化配置到缓存
-                    EHCacheUtil.put( job.getId().toString(), JSON.toJSONString(vo) );
+//                    EHCacheUtil.put( job.getId().toString(), JSON.toJSONString(vo) );
+                    EHCacheUtil.setValue(AgConstant.AG_EHCACHE_JOB,job.getId(),JSON.toJSONString(vo));
                     //初始化计划任务
                     AgTaskRun agTaskRun = new AgTaskRun();
                     agTaskRun.setCron(job.getCron());

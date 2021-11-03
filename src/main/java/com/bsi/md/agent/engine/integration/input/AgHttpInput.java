@@ -33,7 +33,7 @@ public class AgHttpInput extends AgCommonInput{
         //获取token放入context
         AgIntegrationConfigVo config = (AgIntegrationConfigVo) context.get("config");
         String dataSourceId = config.getInputNode().getString("dataSource");
-        AgApiTemplate apiTemplate =  AgDatasourceContainer.getApiDataSource( Integer.parseInt(dataSourceId) );
+        AgApiTemplate apiTemplate =  AgDatasourceContainer.getApiDataSource( dataSourceId );
         if( "token".equals( apiTemplate.getAuthType() ) ){
             context.put("inputToken",AgTokenUtils.getToken(apiTemplate));
         }

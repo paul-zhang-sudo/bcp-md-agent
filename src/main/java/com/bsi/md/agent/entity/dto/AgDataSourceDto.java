@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class AgDataSourceDto {
     //数据源id
-    private Integer id;
+    private String id;
     //名称
     private String name;
     //类型
@@ -18,4 +18,6 @@ public class AgDataSourceDto {
     private String classify;
     //配置值
     private String configValue;
+    //删除标志
+    private Boolean delFlag;
 }

@@ -26,5 +26,7 @@ public class AgConstant {
     //接口分类
     public static final String AG_CLASSIFY_API = "api";
 
+    //任务EhCache
+    public static final String AG_EHCACHE_JOB = "job_config";
 
 }

@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name="md_agent_job")
 public class AgJob extends AgAbstractEntity {
     //所属配置id
-    private Integer configId;
+    private String configId;
     //名称
     private String name;
     //cron表达式
