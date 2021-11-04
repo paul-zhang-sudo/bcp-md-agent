@@ -39,7 +39,7 @@ public class AgDatasourceContainer {
      * @param key
      * @return
      */
-    public static AgJdbcTemplate getJdbcDataSource(Integer key){
+    public static AgJdbcTemplate getJdbcDataSource(String key){
         return jdbcMap.get(key);
     }
 

@@ -15,7 +15,7 @@ public class DBUtils {
      * @param dataSourceId 数据源id
      * @return Object
      */
-    public static Object queryForList(String sql,Object[] args,Integer dataSourceId){
+    public static Object queryForList(String sql,Object[] args,String dataSourceId){
         AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
         return template.queryForList(sql,args);
     }
@@ -27,7 +27,7 @@ public class DBUtils {
      * @param dataSourceId 数据源id
      * @return Object
      */
-    public static Object queryForObject(String sql,Object[] args,Integer dataSourceId) {
+    public static Object queryForObject(String sql,Object[] args,String dataSourceId) {
         AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
         return template.queryForMap(sql, args);
     }
@@ -39,8 +39,20 @@ public class DBUtils {
      * @param dataSourceId 数据源id
      * @return int 更新数量
      */
-    public static int execute(String sql,Object[] args,Integer dataSourceId){
+    public static int execute(String sql,Object[] args,String dataSourceId){
         AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
         return template.update(sql,args);
     }
+
+    /**
+     * 执行新增、更新、删除数据
+     * @param sql sql语句
+     * @param args 参数数组
+     * @param dataSourceId 数据源id
+     * @return int 更新数量
+     */
+//    public static int executeBatch(String sql,Object[] args,Integer dataSourceId){
+//        AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
+//        return template.getJdbcTemplate().ba
+//    }
 }
