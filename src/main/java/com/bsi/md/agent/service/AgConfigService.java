@@ -62,7 +62,7 @@ public class AgConfigService extends FwService {
             job.setId( obj.getString("jobId") );
             job.setConfigId( config.getId() );
             job.setName( obj.getString("jobName") );
-            job.setEnable(true);
+            job.setEnable(obj.getBoolean("enable"));
             JSONObject inputNode = obj.getJSONObject("inputNodeConfig");
             job.setCron(inputNode.getString("cron"));
             job.setConfigValue( obj.toJSONString() );
