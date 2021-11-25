@@ -29,13 +29,13 @@ public class AgEngineFactory {
         JSONObject transformNode = config.getTransformNode();
 
         try{
-            AgInput input = (AgInput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.input."+inputNode.getString("className")).newInstance();
+            AgInput input = (AgInput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.input."+inputNode.getOrDefault("className","AgCommonInput")).newInstance();
             input.setScript( inputNode.getString("scriptContent") );
 
-            AgTransform transform = (AgTransform) ClassUtils.getClass("com.bsi.md.agent.engine.integration.transform."+transformNode.getString("className")).newInstance();
+            AgTransform transform = (AgTransform) ClassUtils.getClass("com.bsi.md.agent.engine.integration.transform."+transformNode.getOrDefault("className","AgJsScriptTransform")).newInstance();
             transform.setScript( transformNode.getString("scriptContent") );
 
-            AgOutput output = (AgOutput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.output."+outputNode.getString("className")).newInstance();
+            AgOutput output = (AgOutput) ClassUtils.getClass("com.bsi.md.agent.engine.integration.output."+outputNode.getOrDefault("className","AgCommonOutput")).newInstance();
             output.setScript( outputNode.getString("scriptContent") );
 
             engine.setInput(input);
