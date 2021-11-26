@@ -75,10 +75,10 @@ public class AgConfigController {
         AgConfigDto c = transform(config);
         log.info("转换之后的配置信息:{}",JSON.toJSONString(c));
         //IOT验签
-//        Resp rs = verify(request);
-//        if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
-//            return rs;
-//        }
+        Resp rs = verify(request);
+        if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
+            return rs;
+        }
         return updateConfig(c);
     }
 
@@ -94,10 +94,10 @@ public class AgConfigController {
         AgDataSourceDto ds = transform(dataSource);
         log.info("转换之后的数据源信息:{}",JSON.toJSONString(ds));
         //IOT验签
-//        Resp rs = verify(request);
-//        if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
-//            return rs;
-//        }
+        Resp rs = verify(request);
+        if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
+            return rs;
+        }
         return updateDataSource(ds);
     }
 
