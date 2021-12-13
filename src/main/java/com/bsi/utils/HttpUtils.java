@@ -45,7 +45,7 @@ public class HttpUtils {
      * @return AgHttpResult
      */
     public static AgHttpResult request(String method, String url, Map<String,String> headers, String body){
-        HttpConfig config = HttpConfig.simpleCustom(12000);
+        HttpConfig config = HttpConfig.simpleCustom(120000);
         HttpHeader header = HttpHeader.custom();
         if( MapUtils.isNotEmpty(headers) ){
             for( String key:headers.keySet() ){
