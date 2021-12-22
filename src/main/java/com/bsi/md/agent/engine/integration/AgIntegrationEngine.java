@@ -10,19 +10,19 @@ public interface AgIntegrationEngine {
      * @param context
      * @return
      */
-    Object input(Context context);
+    Object input(Context context) throws Exception;
 
     /**
      * 转换
      * @param context
      * @return
      */
-    Object transform(Context context);
+    Object transform(Context context) throws Exception;
 
     /**
      * 输出
      * @param context
      * @return
      */
-    Object output(Context context);
+    Object output(Context context) throws Exception;
 }

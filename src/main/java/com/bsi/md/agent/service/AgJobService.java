@@ -66,22 +66,11 @@ public class AgJobService extends FwService {
                 jobSize = jobList.size();
                 for (AgJob job : jobList) {
                     //配置初始化到缓存中
-                    AgIntegrationConfigVo vo = new AgIntegrationConfigVo();
                     AgConfig agConfig = agConfigMap.get(job.getConfigId());
+                    AgIntegrationConfigVo vo = this.buildAgIntegrationConfigVo(agConfig,job.getConfigValue());
                     vo.setTaskId(job.getId());
+                    vo.setTaskName(job.getName());
                     vo.setConfigId(job.getConfigId());
-                    JSONObject conf = JSONObject.parseObject(job.getConfigValue());
-                    JSONObject inputNodeConfig = conf.getJSONObject("inputNodeConfig");
-                    JSONObject transformNodeConfig = conf.getJSONObject("transformNodeConfig");
-                    JSONObject outputNodeConfig = conf.getJSONObject("outputNodeConfig");
-
-                    JSONObject configParam = JSONObject.parseObject( agConfig.getConfigValue() );
-
-                    vo.setInputNode(inputNodeConfig);
-                    vo.setOutputNode(outputNodeConfig);
-                    vo.setTransformNode(transformNodeConfig);
-                    vo.setParamMap(configParam.getInnerMap());
-
                     //初始化配置到缓存
                     EHCacheUtil.setValue(AgConstant.AG_EHCACHE_JOB,job.getId(),JSON.toJSONString(vo));
                     //启用的才去执行
@@ -98,9 +87,18 @@ public class AgJobService extends FwService {
             FwScheduleUtils.clearAndAddTasks(taskList);
             FwScheduleUtils.refreshTasks();
 
-            //4、实时接口初始化 TODO
+            //4、实时接口初始化 TODO test
             if (CollectionUtils.isNotEmpty(apiProxyList)) {
-
+                apiSize = apiProxyList.size();
+                for(AgApiProxy api : apiProxyList){
+                    //初始化api配置到缓存
+                    AgConfig agConfig = agConfigMap.get(api.getConfigId());
+                    AgIntegrationConfigVo vo = this.buildAgIntegrationConfigVo(agConfig,api.getConfigValue());
+                    vo.setTaskName(api.getName());
+                    vo.setTaskId(api.getId());
+                    vo.setConfigId(api.getConfigId());
+                    EHCacheUtil.setValue(AgConstant.AG_EHCACHE_API,api.getPath(),JSON.toJSONString(vo));
+                }
             }
         }catch (Exception e){
             log.error("刷新计划任务缓存失败:{}"+ ExceptionUtils.getFullStackTrace(e));
@@ -108,6 +106,22 @@ public class AgJobService extends FwService {
         }
         log.info("一共初始化{}条定时任务,{}个实时接口",jobSize,apiSize);
         return flag;
+    }
+
+    private AgIntegrationConfigVo buildAgIntegrationConfigVo(AgConfig agConfig,String configValue){
+        AgIntegrationConfigVo vo = new AgIntegrationConfigVo();
+        JSONObject conf = JSONObject.parseObject(configValue);
+        JSONObject inputNodeConfig = conf.getJSONObject("inputNodeConfig");
+        JSONObject transformNodeConfig = conf.getJSONObject("transformNodeConfig");
+        JSONObject outputNodeConfig = conf.getJSONObject("outputNodeConfig");
+
+        JSONObject configParam = JSONObject.parseObject( agConfig.getConfigValue() );
+
+        vo.setInputNode(inputNodeConfig);
+        vo.setOutputNode(outputNodeConfig);
+        vo.setTransformNode(transformNodeConfig);
+        vo.setParamMap(configParam.getInnerMap());
+        return vo;
     }
 
     private AgNodeVo getAgNodeVo(JSONObject node){

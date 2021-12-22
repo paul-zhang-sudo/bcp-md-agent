@@ -18,17 +18,17 @@ public class AgCommonEngine implements AgIntegrationEngine {
     protected AgOutput output;
 
     @Override
-    public Object input(Context context) {
+    public Object input(Context context) throws Exception{
         return input.read(context);
     }
 
     @Override
-    public Object transform(Context context) {
+    public Object transform(Context context) throws Exception{
         return transform.transform(context);
     }
 
     @Override
-    public Object output(Context context) {
+    public Object output(Context context) throws Exception{
         return output.write(context);
     }
 }

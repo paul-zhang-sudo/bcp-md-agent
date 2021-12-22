@@ -6,4 +6,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface AgApiProxyRepository extends JpaRepository<AgApiProxy, Long> {
+    Integer deleteByConfigId(String configId);
 }

@@ -15,12 +15,13 @@ public class AgCommonInput implements AgInput{
     protected String script;
 
     @Override
-    public Object read(Context context) {
+    public Object read(Context context) throws Exception{
         Object result = null;
         try {
             result = AgJavaScriptEngine.getInstance().execute(script,"input",new Object[]{context});
         }catch (Exception e){
             log.error("查询数据报错:{}", ExceptionUtils.getFullStackTrace(e));
+            throw e;
         }
         return result;
     }

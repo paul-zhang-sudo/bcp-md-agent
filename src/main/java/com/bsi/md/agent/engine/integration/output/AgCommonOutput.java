@@ -15,12 +15,13 @@ public class AgCommonOutput implements AgOutput{
     protected String script;
 
     @Override
-    public Object write(Context context) {
+    public Object write(Context context) throws Exception{
         Object result = null;
         try {
             result = AgJavaScriptEngine.getInstance().execute(script,"output",new Object[]{context,context.getData()});
         }catch (Exception e){
             log.error("写入数据报错:{}", ExceptionUtils.getFullStackTrace(e));
+            throw e;
         }
         return result;
     }

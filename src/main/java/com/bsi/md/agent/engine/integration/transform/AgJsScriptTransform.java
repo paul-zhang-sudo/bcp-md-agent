@@ -18,12 +18,13 @@ public class AgJsScriptTransform implements AgTransform{
      * @param context
      * @return
      */
-    public Object transform(Context context){
+    public Object transform(Context context) throws Exception{
         Object result = null;
         try {
             result = AgJavaScriptEngine.getInstance().execute(script,"transform",new Object[]{context,context.getData()});
         }catch (Exception e){
             log.error("转换数据报错:{}", ExceptionUtils.getFullStackTrace(e));
+            throw e;
         }
         return result;
     }

@@ -3,9 +3,11 @@ package com.bsi.md.agent.service;
 import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;
+import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.constant.AgConstant;
 import com.bsi.md.agent.datasource.AgApiTemplate;
+import com.bsi.md.agent.datasource.AgApiUpTemplate;
 import com.bsi.md.agent.entity.AgDataSource;
 import com.bsi.md.agent.datasource.AgJdbcTemplate;
 import com.bsi.md.agent.datasource.AgDatasourceContainer;
@@ -39,8 +41,10 @@ public class AgDataSourceService extends FwService {
         int size = 0;
         try {
             List<AgDataSource> list = findAll();
-            AgDatasourceContainer.clearApiataSource();
-            AgDatasourceContainer.clearJdbcDataSource();
+            //清空数据源
+            AgDatasourceContainer.clearAllDataSource();
+            //清空密钥
+            EHCacheUtil.removeAllEhcache(EHCacheUtil.APIAUTH_CACHE);
             if( CollectionUtils.isNotEmpty(list) ){
                 size = list.size();
                 for(AgDataSource ds:list){
@@ -67,6 +71,15 @@ public class AgDataSourceService extends FwService {
 
                         template.setDataSource(config.getString("driverClassName"),config.getString("url"),config.getString("username"),config.getString("password"));
                         AgDatasourceContainer.addJdbcDataSource(ds.getId(),template);
+
+                    }else if( AgConstant.AG_NODETYPE_APIUP.equals( ds.getType() ) ){
+                        AgApiUpTemplate apiUpTemplate = new AgApiUpTemplate();
+                        apiUpTemplate.setAk(config.getString("ak"));
+                        apiUpTemplate.setSk(config.getString("sk"));
+                        //初始化数据源
+                        AgDatasourceContainer.addApiUpDataSource( ds.getId(),apiUpTemplate );
+                        //初始化密钥
+                        EHCacheUtil.setApiSecret(apiUpTemplate.getAk(),apiUpTemplate.getSk());
                     }
                 }
             }

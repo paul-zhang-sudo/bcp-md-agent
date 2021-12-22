@@ -21,7 +21,7 @@ public class AgDBInput extends AgCommonInput{
      * @return
      */
     @Override
-    public Object read(Context context) {
+    public Object read(Context context) throws Exception{
        return super.read(context);
     }
 }

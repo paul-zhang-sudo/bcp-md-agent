@@ -20,7 +20,7 @@ public class AgHttpOutput extends AgCommonOutput{
      * @return
      */
     @Override
-    public Object write(Context context) {
+    public Object write(Context context) throws Exception{
         setToken(context);
        return super.write(context);
     }

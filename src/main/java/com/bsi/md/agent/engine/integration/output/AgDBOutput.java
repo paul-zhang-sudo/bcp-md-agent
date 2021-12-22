@@ -16,7 +16,7 @@ public class AgDBOutput extends AgCommonOutput{
      * @return Object
      */
     @Override
-    public Object write(Context context) {
+    public Object write(Context context) throws Exception{
        return super.write(context);
     }
 }

@@ -20,7 +20,7 @@ public class AgHttpInput extends AgCommonInput{
      * @return
      */
     @Override
-    public Object read(Context context) {
+    public Object read(Context context) throws Exception{
         setToken(context);
        return super.read(context);
     }

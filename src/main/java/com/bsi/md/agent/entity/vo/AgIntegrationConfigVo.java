@@ -16,6 +16,8 @@ public class AgIntegrationConfigVo {
 
     //任务id
     private String taskId;
+    //任务名称
+    private String taskName;
     //任务参数配置
     private Map<String,Object> paramMap;
 

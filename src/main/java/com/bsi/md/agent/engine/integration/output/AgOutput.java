@@ -12,7 +12,7 @@ public interface AgOutput {
      * @param context
      * @return
      */
-    Object write(Context context);
+    Object write(Context context) throws Exception;
     /**
      * 设置执行脚本
      * @param script

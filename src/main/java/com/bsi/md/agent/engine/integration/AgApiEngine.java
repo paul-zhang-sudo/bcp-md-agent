@@ -6,17 +6,17 @@ package com.bsi.md.agent.engine.integration;
 public class AgApiEngine extends AgCommonEngine{
 
     @Override
-    public Object input(Context context) {
+    public Object input(Context context) throws Exception{
         return super.input(context);
     }
 
     @Override
-    public Object transform(Context context) {
+    public Object transform(Context context) throws Exception{
         return super.transform(context);
     }
 
     @Override
-    public Object output(Context context) {
+    public Object output(Context context) throws Exception{
         return super.output(context);
     }
 }

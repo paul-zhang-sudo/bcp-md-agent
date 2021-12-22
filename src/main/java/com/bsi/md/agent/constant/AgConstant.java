@@ -18,6 +18,7 @@ public class AgConstant {
     //节点类型
     public static final String AG_NODETYPE_API = "api";
     public static final String AG_NODETYPE_DATABASE = "db";
+    public static final String AG_NODETYPE_APIUP = "apiUp";
 
     //数据库分类
     public static final String AG_CLASSIFY_DB_SQLSERVER = "sqlserver";
@@ -28,5 +29,10 @@ public class AgConstant {
 
     //任务EhCache
     public static final String AG_EHCACHE_JOB = "job_config";
+    //任务EhCache
+    public static final String AG_EHCACHE_API = "api_config";
+
+    //鉴权
+    public static final String AG_AUTHORIZATION = "Authorization";
 
 }

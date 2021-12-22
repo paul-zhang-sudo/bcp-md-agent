@@ -12,7 +12,7 @@ public interface AgInput {
      * @param context
      * @return
      */
-    Object read(Context context);
+    Object read(Context context) throws Exception;
 
     /**
      * 设置执行脚本

@@ -12,7 +12,7 @@ public interface AgTransform {
      * @param context
      * @return
      */
-    Object transform(Context context);
+    Object transform(Context context) throws Exception;
 
     /**
      * 设置执行脚本

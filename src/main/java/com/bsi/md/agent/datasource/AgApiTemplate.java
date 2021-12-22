@@ -7,7 +7,7 @@ import lombok.Data;
  * @author fish
  */
 @Data
-public class AgApiTemplate {
+public class AgApiTemplate implements AgDataSourceTemplate{
     //api地址
     private String apiUrl;
 
