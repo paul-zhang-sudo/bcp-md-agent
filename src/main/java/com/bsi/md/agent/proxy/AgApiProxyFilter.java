@@ -76,6 +76,7 @@ public class AgApiProxyFilter implements Filter {
             //将补数据的参数设置到计划任务的上下文中去
             Map<String,Object> paramMap = config.getParamMap();
             context.put("config", paramMap);
+            //添加api标识为y，如果是api输入节点未查询到数据不会终止执行
             context.put("api-flag","Y");
             //处理输入、输出、转换节点的配置
             AgConfigUtils.rebuildNode(config);
