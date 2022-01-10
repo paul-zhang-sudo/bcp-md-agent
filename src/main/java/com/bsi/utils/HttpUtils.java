@@ -48,16 +48,17 @@ public class HttpUtils {
         HttpClient client = null;
         try{
             HCB hcb = HCB.custom()
-                    .pool(500, 50)    	//启用连接池，每个路由最大创建30个链接，总连接数限制为300个
                     .sslpv(SSLs.SSLProtocolVersion.TLSv1_2) 	//可设置ssl版本号，默认SSLv3，用于ssl，也可以调用sslpv("TLSv1.2")
                     .ssl()  			   		//https，支持自定义ssl证书路径和密码，ssl(String keyStorePath, String keyStorepass)
-                    .retry(3);					//重试3次
+                    .pool(500, 50)    	//启用连接池，每个路由最大创建50个链接，总连接数限制为500个
+                    .retry(2);					//重试2次
             client = hcb.build();
         }catch (HttpProcessException e){
             log.info("创建httpclient报错,报错信息:",ExceptionUtils.getFullStackTrace(e));
         }
 
         HttpConfig config = HttpConfig.simpleCustom(80000).client(client);
+//        HttpConfig config = HttpConfig.simpleCustom(80000);
         HttpHeader header = HttpHeader.custom();
         if( MapUtils.isNotEmpty(headers) ){
             for( String key:headers.keySet() ){
