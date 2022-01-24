@@ -1,8 +1,13 @@
 package com.bsi.md.agent.datasource;
 
+import com.alibaba.druid.filter.Filter;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.wall.WallConfig;
+import com.alibaba.druid.wall.WallFilter;
 import com.bsi.framework.core.jdbc.FwJdbcTemplate;
 import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;
+import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.FwJdbcDialectUtils;
 import com.bsi.framework.core.vo.resp.PageResp;
 import com.github.pagehelper.Page;
@@ -10,11 +15,12 @@ import com.github.pagehelper.PageException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.dialect.AbstractHelperDialect;
 import com.github.pagehelper.parser.CountSqlParser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.CacheKey;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,6 +28,7 @@ import java.util.Properties;
  * springjdbc工具类
  * @author fish
  */
+@Slf4j
 public class AgJdbcTemplate extends FwService {
 	
 	protected AbstractHelperDialect autoDialect = null;
@@ -32,15 +39,57 @@ public class AgJdbcTemplate extends FwService {
 		
 	}
 
+	private DruidDataSource createDataSource(String driverClassName,String url,String username,String password) {
+		DruidDataSource datasource = new DruidDataSource();
+
+		List<Filter> fs = new ArrayList<>() ;
+		com.alibaba.druid.filter.logging.Slf4jLogFilter s = new com.alibaba.druid.filter.logging.Slf4jLogFilter() ;
+		s.setStatementExecutableSqlLogEnable(true);
+		fs.add(s) ;
+
+		//允许执行多条语句
+		WallConfig wc = new WallConfig ();
+		wc.setMultiStatementAllow(true);
+		WallFilter wfilter = new WallFilter ();
+		wfilter.setConfig(wc);
+		fs.add(wfilter);
+		datasource.setProxyFilters(fs);
+
+		datasource.setUrl(url);
+		datasource.setUsername(username);
+		datasource.setPassword(password);
+		datasource.setDriverClassName(driverClassName);
+
+		//configuration
+		datasource.setInitialSize(5);
+		datasource.setMinIdle(5);
+		datasource.setMaxActive(10);
+		datasource.setMaxWait(60000);
+		datasource.setTimeBetweenEvictionRunsMillis(60000);
+		datasource.setMinEvictableIdleTimeMillis(30000);
+		datasource.setValidationQuery("select 1");
+		datasource.setTestWhileIdle(true);
+		datasource.setTestOnBorrow(false);
+		datasource.setTestOnReturn(false);
+		datasource.setPoolPreparedStatements(true);
+		datasource.setMaxPoolPreparedStatementPerConnectionSize(100);
+		try {
+			datasource.setFilters("stat,wall,slf4j");
+		} catch (SQLException e) {
+            log.error( "druid configuration initialization filter : {0}", ExceptionUtils.getFullStackTrace(e));
+		}
+		datasource.setConnectionProperties("druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000");
+		return datasource;
+	}
 	public void setDataSource(String driverClassName,String url,String username,String password) {
 		jdbcTemplate = new FwJdbcTemplate();
 		//读取数据库中的默认第三方数据源
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName( driverClassName );
-		dataSource.setUrl( url );
-		dataSource.setUsername( username );
-		dataSource.setPassword( password );
-		jdbcTemplate.setDataSource( dataSource );
+//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//		dataSource.setDriverClassName( driverClassName );
+//		dataSource.setUrl( url );
+//		dataSource.setUsername( username );
+//		dataSource.setPassword( password );
+		jdbcTemplate.setDataSource( createDataSource(driverClassName,url,username,password) );
 
 
 		//根据数据库连接信息解析出，数据库方言，用来分页
