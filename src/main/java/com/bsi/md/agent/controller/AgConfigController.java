@@ -195,9 +195,11 @@ public class AgConfigController {
     private String getDbUrl(String dbType,JSONObject obj){
         String url="";
         if( "oracle".equals( dbType ) ){
-            url ="dbc:oracle:thin:@//%s:%s/%s";
+            url ="jdbc:oracle:thin:@//%s:%s/%s";
         }else if( "sqlserver".equals( dbType ) ){
             url = "jdbc:sqlserver://%s:%s;DatabaseName=%s";
+        }else if( "postgresql".equals( dbType ) ){
+            url = "jdbc:postgresql://%s:%s/%s";
         }
         return String.format(url,obj.getString("url"),obj.getString("port"),obj.getString("databaseName"));
     }
