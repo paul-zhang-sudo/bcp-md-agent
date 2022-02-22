@@ -22,6 +22,8 @@ import com.bsi.md.agent.service.AgDataSourceService;
 import com.bsi.md.agent.utils.AgConfigUtils;
 import com.huaweicloud.sdk.iot.module.ItClient;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +44,7 @@ import java.util.Map;
 @RequestMapping(value = "/api")
 public class AgConfigController {
 
+    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     @Autowired
     private AgDataSourceService agDataSourceService;
     @Autowired
@@ -281,7 +284,7 @@ public class AgConfigController {
                 resp.setErrorCodeAndMsg(500,"前置机未找到taskId为{}的任务！");
                 return resp;
             }
-            log.info("====开始手动执行任务:{}====",param.getTaskId());
+            info_log.info("====开始手动执行任务:{}====",param.getTaskId());
 
 
             //2、调用集成引擎解析规则
@@ -302,9 +305,9 @@ public class AgConfigController {
         }catch (Exception e){
             result = "failure";
             error = ExceptionUtils.getFullStackTrace( e );
-            log.error( "计划任务:{},执行失败,失败信息:{}" , param.getTaskId() ,error );
+            info_log.error( "计划任务:{},执行失败,失败信息:{}" , param.getTaskId() ,error );
         }finally {
-            log.info( "====计划任务:{},执行结束,执行结果:{}====", param.getTaskId() , result );
+            info_log.info( "====计划任务:{},执行结束,执行结果:{}====", param.getTaskId() , result );
             MDC.remove("taskId");
         }
         return resp;
