@@ -1,6 +1,9 @@
 package com.bsi.utils;
 
+import com.bsi.factory.Base64Util;
 import com.bsi.factory.KeysFactory;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.util.Base64Utils;
 import sun.misc.BASE64Encoder;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -99,4 +102,14 @@ public class EncryptUtils {
 		}
 		return target;
 	}
+
+	/**
+	 * base64编码
+	 * @param v
+	 * @return
+	 */
+	public static String base64Encode(String v){
+		return Base64Utils.encodeToString(v.getBytes());
+	}
+
 }
