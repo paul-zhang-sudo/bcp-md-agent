@@ -6,6 +6,9 @@ import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.entity.dto.AgHttpResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,9 +16,9 @@ import java.util.Map;
  * http服务调用工具类
  * @author fish
  */
-@Slf4j
 public class HttpUtils {
 
+    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     /**
      * 调用http接口工具类
      * @param url
@@ -96,7 +99,7 @@ public class HttpUtils {
             result.setHeader( rs.getRespHeaders() );
             result.setResult( rs.getResult() );
         }catch (Exception e){
-            log.error("调用接口报错,报错信息:{}", ExceptionUtils.getFullStackTrace(e));
+            info_log.error("调用接口报错,报错信息:{}", ExceptionUtils.getFullStackTrace(e));
             result.setCode(500);
             result.setResult("error");
         }

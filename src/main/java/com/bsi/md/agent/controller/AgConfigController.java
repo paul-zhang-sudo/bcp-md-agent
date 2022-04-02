@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.httpclient.utils.IoTEdgeUtil;
+import com.bsi.framework.core.utils.DateUtils;
 import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.vo.resp.FwHttpStatus;
@@ -16,6 +17,7 @@ import com.bsi.md.agent.engine.integration.Context;
 import com.bsi.md.agent.entity.AgConfig;
 import com.bsi.md.agent.entity.dto.*;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
+import com.bsi.md.agent.log.AgTaskLog;
 import com.bsi.md.agent.repository.AgConfigRepository;
 import com.bsi.md.agent.service.AgConfigService;
 import com.bsi.md.agent.service.AgDataSourceService;
@@ -276,14 +278,16 @@ public class AgConfigController {
         String error = "";
         String result = "success";
         try{
-            //配置日志参数，不同日志输出到不同文件
-            MDC.put("taskId", param.getTaskId()+"-repair");
             //1、获取到执行规则
             AgIntegrationConfigVo config = JSON.parseObject( EHCacheUtil.getValue(AgConstant.AG_EHCACHE_JOB,param.getTaskId()).toString(),AgIntegrationConfigVo.class);
             if(config==null){
                 resp.setErrorCodeAndMsg(500,"前置机未找到taskId为{}的任务！");
                 return resp;
             }
+            //配置日志参数，不同日志输出到不同文件
+            MDC.put("taskId", config.getTaskName()+"-"+param.getTaskId()+"-repair");
+            long startTime = System.currentTimeMillis();
+            AgTaskLog agTaskLog = AgTaskLog.builder().taskName(config.getTaskName()+"(手动)").taskCode(param.getTaskId()).errorId("-").timeLocal( DateUtils.toString( DateUtils.now() ) ).build();
             info_log.info("====开始手动执行任务:{}====",param.getTaskId());
 
 
@@ -300,7 +304,7 @@ public class AgConfigController {
             context.put("inputConfig",config.getInputNode());
             context.put("outputConfig",config.getOutputNode());
             context.put("transformConfig",config.getTransformNode());
-
+            context.put("taskInfoLog",agTaskLog);
             AgTaskBootStrap.custom().context(context).engine(engine).exec();
         }catch (Exception e){
             result = "failure";
