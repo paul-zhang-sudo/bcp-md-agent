@@ -3,10 +3,7 @@ package com.bsi.md.agent.task;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.schedule.FwTask;
-import com.bsi.framework.core.utils.DateUtils;
-import com.bsi.framework.core.utils.EHCacheUtil;
-import com.bsi.framework.core.utils.ExceptionUtils;
-import com.bsi.framework.core.utils.FwSpringContextUtil;
+import com.bsi.framework.core.utils.*;
 import com.bsi.md.agent.constant.AgConstant;
 import com.bsi.md.agent.datasource.AgApiTemplate;
 import com.bsi.md.agent.datasource.AgDatasourceContainer;
@@ -15,6 +12,7 @@ import com.bsi.md.agent.engine.integration.AgIntegrationEngine;
 import com.bsi.md.agent.engine.integration.AgTaskBootStrap;
 import com.bsi.md.agent.engine.integration.Context;
 import com.bsi.md.agent.entity.AgJobParam;
+import com.bsi.md.agent.entity.dto.AgTaskParamDto;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
 import com.bsi.md.agent.log.AgTaskLog;
 import com.bsi.md.agent.log.AgTaskLogOutput;
@@ -37,6 +35,7 @@ import java.util.UUID;
 public class AgTaskRun extends FwTask {
     private String taskId;
     private String name;
+    private String param;
     private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     @Override
@@ -52,11 +51,23 @@ public class AgTaskRun extends FwTask {
             MDC.put("taskId", name+"-"+taskId);
             info_log.info("====计划任务开始执行,计划任务名称:{}，编码:{}====",name,taskId);
             //1、获取到执行规则
-            AgIntegrationConfigVo config = JSON.parseObject( EHCacheUtil.getValue(AgConstant.AG_EHCACHE_JOB,taskId).toString(),AgIntegrationConfigVo.class);
+            Object taskConfig = EHCacheUtil.getValue(AgConstant.AG_EHCACHE_JOB,taskId);
+            if(taskConfig==null){
+                info_log.error("任务不存在，请检查");
+                return;
+            }
+            AgIntegrationConfigVo config = JSON.parseObject( taskConfig.toString(),AgIntegrationConfigVo.class);
             //2、调用集成引擎解析规则
             AgIntegrationEngine engine = AgEngineFactory.getJobEngine(config);
             Context context = new Context();
             context.setEnv(new HashMap());
+            //如果走的是异步任务
+            if(StringUtils.hasText(param)){
+                AgTaskParamDto dto = new AgTaskParamDto();
+                dto.setRunParams(param);
+                dto.setTaskId(taskId);
+                config.getParamMap().put("repairParam",dto);
+            }
             context.put("config", config.getParamMap());
             //处理输入、输出、转换节点的配置
             AgConfigUtils.rebuildNode(config);

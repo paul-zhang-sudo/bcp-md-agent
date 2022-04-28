@@ -110,6 +110,22 @@ public class XmlUtils {
     }
 
     /**
+     * 根据xml路径获取xml节点下的文本
+     * @param xml
+     * @param path
+     * @return
+     */
+    public static String getTextByPath(String xml,String path){
+        Node n = null;
+        try {
+            Document document = DocumentHelper.parseText(xml);
+            n = document.selectSingleNode(path);
+        }catch (Exception e){
+            log.error("获取xml的节点文本报错:{}",ExceptionUtils.getFullStackTrace(e));
+        }
+        return n==null?"":n.getText();
+    }
+    /**
      * converter类
      */
     static class MapEntryConverter implements Converter{
@@ -222,22 +238,39 @@ public class XmlUtils {
         }
     }
     public static  void main(String[] ars) throws Exception{
+        String xml="<Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "    <Header>\n" +
+                "        <ns0:Urc xmlns:ns0=\"http://ws.uap.nc/lang\">\n" +
+                "            <ns0:datasource>design</ns0:datasource>\n" +
+                "            <ns0:corpCode>1001</ns0:corpCode>\n" +
+                "            <ns0:userCode>#UAP#</ns0:userCode>\n" +
+                "            <ns0:langCode>simpchn</ns0:langCode>\n" +
+                "        </ns0:Urc>\n" +
+                "    </Header>\n" +
+                "    <Body>\n" +
+                "        <ns1:saveOrUpdateResponse xmlns:ns1=\"http://net.sm.itf.nc/INetWebserviceServer\">\n" +
+                "            <return>{\"successResult\":{\"data\":[{\"pk_supplierprice\":\"1001A5100000004ODKV3\",\"vbdef1\":\"1\",\"ts\":\"2022-04-19 17:51:16\"}]},\"failResult\":{\"data\":[],\"failMsg\":\"\"}}</return>\n" +
+                "        </ns1:saveOrUpdateResponse>\n" +
+                "    </Body>\n" +
+                "</Envelope>";
+        System.out.println( getTextByPath(xml,"//return") ) ;
+       // log.info( XmlUtils.xml2json(xml,"Envelope") );
 
-        String xml = "<ufinterface billtype=\"supplier\" filename=\"supplier17ca11026ee0000zhenyun.xml\" isexchange=\"Y\" replace=\"Y\" roottag=\"sendresult\" sender=\"zhenyun\" successful=\"N\">\n" +
-                "    <sendresult>\n" +
-                "        <billpk>\n" +
-                "        </billpk>\n" +
-                "        <bdocid>17ca11035e5000000000000000000000supplier102480</bdocid>\n" +
-                "        <filename>supplier17ca11026ee0000zhenyun.xml</filename>\n" +
-                "        <resultcode>32001</resultcode>\n" +
-                "        <resultdescription>单据  17ca11035e5000000000000000000000supplier102480  开始处理...\n" +
-                "单据  17ca11035e5000000000000000000000supplier102480  处理错误:业务插件处理错误:插件类=nc.bs.bd.pfxx.plugin.SupplierPfxxPlugin,异常信息:下列字段值已存在，不允许重复，请检查：\n" +
-                "[客商编码: CO00010673]</resultdescription>\n" +
-                "        <content></content>\n" +
-                "    </sendresult>\n" +
-                "</ufinterface>";
-        xmlStream.alias("ufinterface",Map.class);
-        log.info( XmlUtils.xml2json(xml) );
+//        String xml = "<ufinterface billtype=\"supplier\" filename=\"supplier17ca11026ee0000zhenyun.xml\" isexchange=\"Y\" replace=\"Y\" roottag=\"sendresult\" sender=\"zhenyun\" successful=\"N\">\n" +
+//                "    <sendresult>\n" +
+//                "        <billpk>\n" +
+//                "        </billpk>\n" +
+//                "        <bdocid>17ca11035e5000000000000000000000supplier102480</bdocid>\n" +
+//                "        <filename>supplier17ca11026ee0000zhenyun.xml</filename>\n" +
+//                "        <resultcode>32001</resultcode>\n" +
+//                "        <resultdescription>单据  17ca11035e5000000000000000000000supplier102480  开始处理...\n" +
+//                "单据  17ca11035e5000000000000000000000supplier102480  处理错误:业务插件处理错误:插件类=nc.bs.bd.pfxx.plugin.SupplierPfxxPlugin,异常信息:下列字段值已存在，不允许重复，请检查：\n" +
+//                "[客商编码: CO00010673]</resultdescription>\n" +
+//                "        <content></content>\n" +
+//                "    </sendresult>\n" +
+//                "</ufinterface>";
+//        xmlStream.alias("ufinterface",Map.class);
+//        log.info( XmlUtils.xml2json(xml) );
 
 //        String json="{\"ufinterface\":{\"ufinterface-attr\":{\"account\":\"004\",\"billtype\":\"supplier\",\"filename\":\"\",\"groupcode\":\"00\",\"isexchange\":\"Y\",\"replace\":\"Y\",\"roottag\":\"\",\"sender\":\"zhenyun\"},\"bill\":{\"bill-attr\":{\"id\":\"1001ZZ1000000003RRFK\"},\"billhead\":{\"pk$group\":\"00\",\"pk$org\":\"00\",\"code\":\"0911\",\"name\":\"测试1021\",\"shortname\":\"1021\",\"ename\":\"a\",\"mnecode\":\"a\",\"trade\":\"\",\"pk$supplier$main\":\"\",\"supprop\":\"0\",\"pk$areacl\":\"\",\"pk$supplierclass\":\"503\",\"iscustomer\":\"N\",\"corcustomer\":\"\",\"isfreecust\":\"N\",\"isoutcheck\":\"N\",\"pk$financeorg\":\"\",\"taxpayerid\":\"\",\"registerfund\":\"0.00000000\",\"legalbody\":\"\",\"ecotypesincevfive\":\"\",\"pk$suptaxes\":\"\",\"zipcode\":\"\\n            \",\"url\":\"a\",\"memo\":\"\\n            \",\"suplinkman\":[{\"linkmanvo\":{\"code\":\"a\",\"name\":\"a\",\"sex\":\"0\",\"vjob\":\"a\",\"birthday\":\"2012-05-25 10:26:11\",\"phone\":\"a\",\"cell\":\"a\",\"fax\":\"a\",\"email\":\"a\",\"webaddress\":\"a\",\"address\":\"a\",\"postcode\":\"a\",\"memo\":\"a\"},\"pk$linkman\":\"\",\"isdefault\":\"N\"},{\"linkmanvo\":{\"code\":\"a\",\"name\":\"a\",\"sex\":\"0\",\"vjob\":\"a\",\"birthday\":\"2012-05-25 10:26:11\",\"phone\":\"a\",\"cell\":\"a\",\"fax\":\"a\",\"email\":\"a\",\"webaddress\":\"a\",\"address\":\"a\",\"postcode\":\"a\",\"memo\":\"a\"},\"pk$linkman\":\"\",\"isdefault\":\"N\"}],\"tel1\":\"\",\"tel2\":\"\",\"tel3\":\"\",\"fax1\":\"\",\"fax2\":\"\",\"email\":\"\",\"pk$country\":\"CN\",\"pk$timezone\":\"P0800\",\"pk$format\":\"ZH-CN\",\"enablestate\":\"2\",\"corpaddress\":{\"code\":\"a\",\"country\":\"CN\",\"detailinfo\":\"a\",\"postcode\":\"a\",\"province\":\"\",\"status\":\"0\",\"vsection\":\"\"}}}}}\n";
 //        System.out.println( json2Xml(json,"ufinterface") );

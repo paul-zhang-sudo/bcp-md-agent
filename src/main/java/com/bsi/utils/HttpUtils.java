@@ -4,7 +4,6 @@ import com.bsi.framework.core.httpclient.common.*;
 import com.bsi.framework.core.httpclient.utils.HttpClientUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.entity.dto.AgHttpResult;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
