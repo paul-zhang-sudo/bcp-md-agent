@@ -15,8 +15,10 @@ import com.bsi.md.agent.engine.script.AgScriptEngine;
 import com.bsi.md.agent.entity.AgApiProxy;
 import com.bsi.md.agent.entity.AgConfig;
 import com.bsi.md.agent.entity.AgJob;
+import com.bsi.md.agent.entity.AgJobConfig;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
 import com.bsi.md.agent.entity.vo.AgNodeVo;
+import com.bsi.md.agent.repository.AgJobConfigRepository;
 import com.bsi.md.agent.repository.AgJobRepository;
 import com.bsi.md.agent.task.AgTaskRun;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,8 @@ public class AgJobService extends FwService {
     private AgApiProxyService agApiProxyService;
     @Autowired
     private AgConfigService agConfigService;
+    @Autowired
+    private AgJobConfigRepository agJobConfigRepository;
 
     //新增货哦这
     public void save(AgJob job){
@@ -65,6 +69,13 @@ public class AgJobService extends FwService {
             if (CollectionUtils.isNotEmpty(configList)) {
                 agConfigMap = configList.stream().collect(Collectors.toMap(AgConfig::getId, Function.identity()));
             }
+
+            List<AgJobConfig> jobWarnList = agJobConfigRepository.findAll();
+            Map<String,AgJobConfig> jobWarnMap = new HashMap<>();
+            if(CollectionUtils.isNotEmpty(jobWarnList)){
+                jobWarnMap = jobWarnList.stream().filter(a->a.getEnable()).collect(Collectors.toMap(AgJobConfig::getTaskId, Function.identity()));
+            }
+
             List<AgJob> jobList = this.findAll();
             List<AgApiProxy> apiProxyList = agApiProxyService.findAllEnable();
 
@@ -83,7 +94,8 @@ public class AgJobService extends FwService {
                     vo.setTaskId(job.getId());
                     vo.setTaskName(job.getName());
                     vo.setConfigId(job.getConfigId());
-                    vo.setWarnMethodId(job.getWarnMethodId());
+                    AgJobConfig jc = jobWarnMap.get(job.getId());
+                    vo.setWarnMethodId(jc==null?"":jc.getWarnMethodId());
                     //初始化配置到缓存
                     EHCacheUtil.setValue(AgConstant.AG_EHCACHE_JOB,job.getId(),JSON.toJSONString(vo));
                     //启用的才去执行

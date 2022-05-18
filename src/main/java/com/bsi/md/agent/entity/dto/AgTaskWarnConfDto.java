@@ -8,6 +8,8 @@ import lombok.Data;
  */
 @Data
 public class AgTaskWarnConfDto {
+    private String id;
     private String taskId;
+    private Boolean enable;
     private String warnMethod;
 }

@@ -8,9 +8,11 @@ import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.constant.AgConstant;
 import com.bsi.md.agent.entity.AgJob;
+import com.bsi.md.agent.entity.AgJobConfig;
 import com.bsi.md.agent.entity.AgWarnMethod;
 import com.bsi.md.agent.entity.dto.AgTaskWarnConfDto;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
+import com.bsi.md.agent.repository.AgJobConfigRepository;
 import com.bsi.md.agent.repository.AgJobRepository;
 import com.bsi.md.agent.repository.AgWarnMethodRepository;
 import com.bsi.utils.JSONUtils;
@@ -30,6 +32,8 @@ public class AgWarnMethodService extends FwService {
     private AgWarnMethodRepository agWarnMethodRepository;
     @Autowired
     private AgJobRepository agJobRepository;
+    @Autowired
+    private AgJobConfigRepository agJobConfigRepository;
 
     /**
      * 查询所有数据源配置
@@ -74,13 +78,17 @@ public class AgWarnMethodService extends FwService {
         AgWarnMethod m = JSON.parseArray(warnConf.getWarnMethod(),AgWarnMethod.class).get(0);
         agWarnMethodRepository.save(m);
         //String methodIds = mlist.stream().map(a->a.getId()).collect(Collectors.joining(","));
-        //修改任务中的告警方式
-        AgJob job = agJobRepository.getOne(warnConf.getTaskId());
-        job.setWarnMethodId(m.getId());
-        agJobRepository.save(job);
+
+        //保存或者修改任务的告警配置
+        AgJobConfig jc = new AgJobConfig();
+        jc.setId(warnConf.getId());
+        jc.setTaskId(warnConf.getTaskId());
+        jc.setEnable(warnConf.getEnable());
+        jc.setWarnMethodId(m.getId());
+        agJobConfigRepository.save(jc);
 
         //更新任务配置缓存，加上告警的配置
-        config.setWarnMethodId(m.getId());
+        config.setWarnMethodId(warnConf.getEnable()?m.getId():"");
         EHCacheUtil.setValue(AgConstant.AG_EHCACHE_JOB,warnConf.getTaskId(),JSON.toJSONString(config));
 
         //刷新告警缓存
