@@ -7,6 +7,11 @@ import com.bsi.md.agent.entity.dto.AgHttpResult;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +23,52 @@ import java.util.Map;
 public class HttpUtils {
 
     private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+
+    /**
+     * 通过restTemplate请求数据
+     * @param url
+     * @param headers
+     * @param body
+     * @return
+     */
+    public static AgHttpResult postByRestTemplate(String url,Map<String,String> headers, String body){
+        AgHttpResult ar = new AgHttpResult();
+        RestTemplate client = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        headers.forEach((k,v)->{
+            header.add(k,v);
+        });
+        HttpEntity<String> strEntity = new HttpEntity<String>(body,header);
+        ResponseEntity<String> result = client.exchange(url, HttpMethod.POST,strEntity,String.class);
+        ar.setCode(result.getStatusCodeValue());
+        ar.setResult(result.getBody());
+        return ar;
+    }
+
+//    public static void main(String[] args) {
+//        Map<String,String> map = new HashMap<>();
+//        map.put("Authorization","Bearer 86f574cb-d694-45f7-848c-0b774e50e0a9");
+//        map.put("Content-Type","application/json");
+//        String str="{\n" +
+//                "    \"header\": {\n" +
+//                "        \"applicationCode\": \"GOINGLINK_CLOUD_TEST\",\n" +
+//                "        \"applicationGroupCode\": \"PUBLIC_CLOUD\",\n" +
+//                "        \"batchNum\": 128278325,\n" +
+//                "        \"externalSystemCode\": \"CFYX_AXKD912DX0S\",\n" +
+//                "        \"interfaceCode\": \"SPRM_SOURCE_RESULT_EXP_QUERY\",\n" +
+//                "        \"userName\": \"\"\n" +
+//                "    },\n" +
+//                "    \"body\": {\n" +
+//                "        \"page\": 0,\n" +
+//                "        \"size\": 200,\n" +
+//                "        \"dateFrom\": \"2020-03-20 00:00:00\",\n" +
+//                "        \"dateTo\": \"2022-06-20 00:00:00\"\n" +
+//                "   }\n" +
+//                "}";
+//        AgHttpResult rs = HttpUtils.postByRestTemplate("https://test.isrm.going-link.com/sitf/v1/source-exps/price-lib/pull",map,str);
+//        System.out.println("code:"+rs.getCode()+";value:"+rs.getResult());
+//    }
+
     /**
      * 调用http接口工具类
      * @param url
