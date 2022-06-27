@@ -5,21 +5,22 @@ import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;
 import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
+import com.bsi.framework.core.utils.StringUtils;
 import com.bsi.md.agent.constant.AgConstant;
-import com.bsi.md.agent.datasource.AgApiTemplate;
-import com.bsi.md.agent.datasource.AgApiUpTemplate;
+import com.bsi.md.agent.datasource.*;
 import com.bsi.md.agent.entity.AgDataSource;
-import com.bsi.md.agent.datasource.AgJdbcTemplate;
-import com.bsi.md.agent.datasource.AgDatasourceContainer;
 import com.bsi.md.agent.entity.dto.AgDataSourceDto;
 import com.bsi.md.agent.repository.AgDataSourceRepository;
 import com.bsi.utils.DecryptUtils;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -71,7 +72,7 @@ public class AgDataSourceService extends FwService {
 
                         template.setDataSource(config.getString("driverClassName"),config.getString("url"),config.getString("username"),config.getString("password"));
                         AgDatasourceContainer.addJdbcDataSource(ds.getId(),template);
-
+                    //api上报类型数据源处理
                     }else if( AgConstant.AG_NODETYPE_APIUP.equals( ds.getType() ) ){
                         AgApiUpTemplate apiUpTemplate = new AgApiUpTemplate();
                         apiUpTemplate.setAk(config.getString("ak"));
@@ -80,6 +81,17 @@ public class AgDataSourceService extends FwService {
                         AgDatasourceContainer.addApiUpDataSource( ds.getId(),apiUpTemplate );
                         //初始化密钥
                         EHCacheUtil.setApiSecret(apiUpTemplate.getAk(),apiUpTemplate.getSk());
+                    //sapRfc类型
+                    }else if( AgConstant.AG_NODETYPE_SAPRFC.equals( ds.getType() ) ){
+                        Map<String,String> map = Collections.emptyMap();
+                        String otherParam = config.getString("otherParam");
+                        if(StringUtils.hasText(otherParam)){
+                            map = JSONObject.parseObject(otherParam,Map.class);
+                        }
+                        AgSapRFCTemplate sapRFCTemplate = new AgSapRFCTemplate(ds.getId(),config.getString("serverIp"),
+                                config.getString("serverNo"),config.getString("clientNo"),config.getString("userName"),
+                                config.getString("password"),map);
+                        AgDatasourceContainer.addSapRfcDataSource( ds.getId(), sapRFCTemplate);
                     }
                 }
             }

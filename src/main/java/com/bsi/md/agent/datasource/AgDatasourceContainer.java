@@ -11,6 +11,7 @@ public class AgDatasourceContainer {
     private static Map<String,AgJdbcTemplate> jdbcMap = new HashMap<>();
     private static Map<String, AgApiTemplate> apiMap = new HashMap<>();
     private static Map<String, AgApiUpTemplate> apiUpMap = new HashMap<>();
+    private static Map<String, AgSapRFCTemplate> sapRfcMap = new HashMap<>();
 
     /**
      * 添加一个jdbc数据源
@@ -42,6 +43,12 @@ public class AgDatasourceContainer {
         apiMap.clear();
     }
     /**
+     * 清空rfc数据源map
+     */
+    public static void clearSapRfcDataSource(){
+        sapRfcMap.clear();
+    }
+    /**
      * 添加一个jdbc数据源
      * @param key
      * @param template
@@ -66,6 +73,7 @@ public class AgDatasourceContainer {
         clearApiDataSource();
         clearApiUpDataSource();
         clearJdbcDataSource();
+        clearSapRfcDataSource();
     }
 
     /**
@@ -93,5 +101,22 @@ public class AgDatasourceContainer {
      */
     public static AgApiTemplate getApiDataSource(String key){
         return apiMap.get(key);
+    }
+    /**
+     * 添加一个sapRFC数据源
+     * @param key
+     * @param template
+     */
+    public static void addSapRfcDataSource(String key,AgSapRFCTemplate template){
+        sapRfcMap.put(key,template);
+    }
+
+    /**
+     * 获取sapRFC数据源
+     * @param key
+     * @return
+     */
+    public static AgSapRFCTemplate getSapRfcDataSource(String key){
+        return sapRfcMap.get(key);
     }
 }

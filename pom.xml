@@ -36,6 +36,16 @@
             <artifactId>iot-module-client</artifactId>
             <version>2.1.2</version>
         </dependency>
+
+        <!-- sapjco3 -->
+        <dependency>
+            <groupId>com.sap</groupId>
+            <artifactId>sapjco</artifactId>
+            <version>3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/sapjco3.jar</systemPath>
+        </dependency>
+
         <!-- xml、json转换 -->
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
@@ -125,6 +135,14 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.*</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
                 </includes>
             </resource>
         </resources>

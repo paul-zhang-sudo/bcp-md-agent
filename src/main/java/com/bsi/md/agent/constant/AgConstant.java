@@ -19,6 +19,7 @@ public class AgConstant {
     public static final String AG_NODETYPE_API = "api";
     public static final String AG_NODETYPE_DATABASE = "db";
     public static final String AG_NODETYPE_APIUP = "apiUp";
+    public static final String AG_NODETYPE_SAPRFC = "sapRFC";
 
     //数据库分类
     public static final String AG_CLASSIFY_DB_SQLSERVER = "sqlserver";
