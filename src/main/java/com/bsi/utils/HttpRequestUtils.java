@@ -37,6 +37,20 @@ public class HttpRequestUtils {
     }
 
     /**
+     * 获取调用方法
+     */
+    public static String getMethod(){
+        return RequestUtils.getRequest().getMethod();
+    }
+
+    /**
+     * 设置返回码
+     */
+    public static void setCode(int code){
+        RequestUtils.getResponse().setStatus(code);
+    }
+
+    /**
      * 获取请求body
      */
     public static String getRequestBody(){

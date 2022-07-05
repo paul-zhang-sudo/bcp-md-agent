@@ -38,6 +38,24 @@ public class RSAUtils {
         }
     }
 
+    /**
+     * 解密
+     *
+     * @param content 待解密内容
+     * @param keyStr  私钥
+     * @return
+     */
+    public static String decrypt(String content, String keyStr, boolean isPrivate) {
+        try {
+            Cipher cipher = Cipher.getInstance("RSA");
+            Key key = isPrivate ? getPrivateKey(keyStr) : getPublicKey(keyStr);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return new String((cipher.doFinal(Base64Util.decryptBASE64(content))));
+        } catch (Exception e) {
+            log.info("解密失败,content:{},ketStr:{}.isPrivate:{},error:{}",content,keyStr,isPrivate,e.getMessage());
+            return null;
+        }
+    }
 
     private static RSAPrivateKey getPrivateKey(String privateKey) throws Exception {
         return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Base64Util.decryptBASE64(privateKey)));
