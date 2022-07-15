@@ -21,9 +21,21 @@ public class AgRFCManager
     private static JCoDestination destination = null;
 
     /**
+     * 添加或者修改sap连接信息
+     * @param key
+     * @param p
+     */
+    public static void registerProperties(String key,Properties p) {
+        if(provider==null){
+            initProvider();
+        }
+        provider.changeProperties(key,p);
+    }
+
+    /**
      * 初始化provider
      */
-    static {
+    private static void initProvider(){
         provider = new AgDestinationDataProvider();
         try {
             Environment.registerDestinationDataProvider(provider);
@@ -31,16 +43,6 @@ public class AgRFCManager
             log.error("sap provider注册报错,报错信息:{}", ExceptionUtils.getFullStackTrace(e));
         }
     }
-
-    /**
-     * 添加或者修改sap连接信息
-     * @param key
-     * @param p
-     */
-    public static void registerProperties(String key,Properties p) {
-        provider.changeProperties(key,p);
-    }
-
 
     /**
      * 获取JCoDestination

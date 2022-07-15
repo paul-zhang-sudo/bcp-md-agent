@@ -1,5 +1,7 @@
 package com.bsi.md.agent.datasource;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,25 @@ public class AgDatasourceContainer {
     private static Map<String, AgApiTemplate> apiMap = new HashMap<>();
     private static Map<String, AgApiUpTemplate> apiUpMap = new HashMap<>();
     private static Map<String, AgSapRFCTemplate> sapRfcMap = new HashMap<>();
+    private static Map<String, JSONObject> propertiesMap = new HashMap<>();
 
+    /**
+     * 获取数据源属性
+     * @param key
+     * @return JSONObject
+     */
+    public static JSONObject getDSProperties(String key){
+        return propertiesMap.get(key);
+    }
+
+    /**
+     * 设置数据源属性
+     * @param key
+     * @param prop
+     */
+    public static void setDSProperties(String key,JSONObject prop){
+        propertiesMap.put(key,prop);
+    }
     /**
      * 添加一个jdbc数据源
      * @param key
@@ -74,6 +94,7 @@ public class AgDatasourceContainer {
         clearApiUpDataSource();
         clearJdbcDataSource();
         clearSapRfcDataSource();
+        propertiesMap.clear();
     }
 
     /**

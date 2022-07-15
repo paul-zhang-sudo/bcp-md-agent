@@ -9,6 +9,7 @@ import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.StringUtils;
 import com.bsi.md.agent.constant.AgConstant;
+import com.bsi.md.agent.datasource.AgDatasourceContainer;
 import com.bsi.md.agent.engine.pool.AgExecEnginePool;
 import com.bsi.md.agent.engine.script.AgJavaScriptEngine;
 import com.bsi.md.agent.engine.script.AgScriptEngine;
@@ -156,7 +157,8 @@ public class AgJobService extends FwService {
         JSONObject outputNodeConfig = conf.getJSONObject("outputNodeConfig");
 
         JSONObject configParam = JSONObject.parseObject( agConfig.getConfigValue() );
-
+        setProp(inputNodeConfig);
+        setProp(outputNodeConfig);
         vo.setInputNode(inputNodeConfig);
         vo.setOutputNode(outputNodeConfig);
         vo.setTransformNode(transformNodeConfig);
@@ -165,6 +167,15 @@ public class AgJobService extends FwService {
         return vo;
     }
 
+    private void setProp(JSONObject obj){
+        String dsId = obj.getString("dataSource");
+        if (StringUtils.hasText( dsId ) ){
+            JSONObject dsProp = AgDatasourceContainer.getDSProperties(dsId);
+            if(dsProp!=null){
+                obj.put("dsProp",dsProp);
+            }
+        }
+    }
     private AgNodeVo getAgNodeVo(JSONObject node){
         return AgNodeVo.builder().type( node.getString("type") )
                 .classify( node.getString("classify") )

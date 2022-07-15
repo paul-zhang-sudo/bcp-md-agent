@@ -1,5 +1,6 @@
 package com.bsi.md.agent.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;
@@ -11,6 +12,7 @@ import com.bsi.md.agent.datasource.*;
 import com.bsi.md.agent.entity.AgDataSource;
 import com.bsi.md.agent.entity.dto.AgDataSourceDto;
 import com.bsi.md.agent.repository.AgDataSourceRepository;
+import com.bsi.md.agent.utils.AgJasyptUtils;
 import com.bsi.utils.DecryptUtils;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,17 @@ public class AgDataSourceService extends FwService {
                         }
                     });
                     config = obj;
+                    //处理数据源属性
+                    JSONArray global = config.getJSONArray("globalParams");
+                    if(global!=null && global.size()>0){
+                        JSONObject prop = new JSONObject();
+                        for(int i=0;i<global.size();i++){
+                            JSONObject o = global.getJSONObject(i);
+                           prop.put( o.getString("key"),o.getBooleanValue("secret")?AgJasyptUtils.decode(AgJasyptUtils.PWD,o.getString("value")):o.getString("value"));
+                        }
+                        AgDatasourceContainer.setDSProperties(ds.getId(),prop);
+                    }
+
                     //api类型数据源处理
                     if( AgConstant.AG_NODETYPE_API.equals( ds.getType() ) ){
                         AgApiTemplate apiTemplate = new AgApiTemplate();
