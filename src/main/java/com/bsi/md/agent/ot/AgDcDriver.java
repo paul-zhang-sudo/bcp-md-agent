@@ -62,10 +62,20 @@ public class AgDcDriver implements PointsCallback, ModuleShadowNotificationCallb
             if(cfv.size()>0){
                 log.info("进行属性替换");
                 cfv.forEach((k,v)->{
+                    if("globalParams".equals(k)){
+                        return;
+                    }
                     cfv.put(k,otParam.getOrDefault(dto.getId()+"_"+k,v));
                 });
-                dto.setConfigValue(cfv.toJSONString());
             }
+            JSONArray globalParams = cfv.getJSONArray("globalParams");
+            if(globalParams!=null && globalParams.size()>0){
+                for(int j=0;j<globalParams.size();j++){
+                    JSONObject glParam = globalParams.getJSONObject(j);
+                    glParam.put("value",otParam.getOrDefault(dto.getId()+"_"+glParam.get("key"),glParam.get("value")));
+                }
+            }
+            dto.setConfigValue(cfv.toJSONString());
             log.info("要更新的数据源:{}",JSON.toJSONString(dto));
             //刷新数据源
             agDataSourceService.updateDS(dto);
