@@ -12,6 +12,7 @@ import com.huaweicloud.sdk.iot.module.DcClient;
 import com.huaweicloud.sdk.iot.module.ModuleShadowNotificationCallback;
 import com.huaweicloud.sdk.iot.module.PointsCallback;
 import com.huaweicloud.sdk.iot.module.dto.*;
+import com.huaweicloud.sdk.iot.module.transport.ConnectionStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,11 @@ public class AgDcDriver implements PointsCallback, ModuleShadowNotificationCallb
             agConfigService.deleteConfig( cfn );
             agConfigService.updateConfig( cfn );
         }
+        //暂时返回连接成功，后续再处理
+        DsConnectionState conn = new DsConnectionState();
+        conn.setConnectionStatus(ConnectionStatus.CONNECTED.toString());
+        conn.setInfo("连接成功");
+        dcClient.notifyDsConnectionState( conn );
         log.info("over>>配置信息已经更新到前置机");
     }
 

@@ -145,7 +145,7 @@ public class AgSapRFCTemplate implements AgDataSourceTemplate{
             Iterator<JCoField> iterator = tables.iterator();
             while (iterator.hasNext()){
                 JCoField j = iterator.next();
-                info_log.info("JCoField:{},name:{}", JSONUtils.toJson(j),j.getName());
+                info_log.info("JCoField:{},name:{}", j.toString(),j.getName());
                 JCoTable tb = j.getTable();
                 JCoRecordMetaData tableMeta = tb.getRecordMetaData();
                 for(int i = 0; i < tableMeta.getFieldCount(); i++){
