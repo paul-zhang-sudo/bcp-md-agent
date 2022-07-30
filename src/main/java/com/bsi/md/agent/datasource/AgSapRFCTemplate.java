@@ -1,13 +1,18 @@
 package com.bsi.md.agent.datasource;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.sap.AgRFCManager;
+import com.bsi.utils.JSONUtils;
 import com.sap.conn.jco.*;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 import lombok.Data;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -104,6 +109,58 @@ public class AgSapRFCTemplate implements AgDataSourceTemplate{
 //                });
 //                list.add(obj);
 //            }
+        }catch (Exception e){
+            info_log.error("调用jco函数报错,错误信息:{}", ExceptionUtils.getFullStackTrace(e));
+        }
+        return result;
+    }
+
+    /**
+     * 执行jco函数
+     * @param functionName
+     * @param param
+     * @return
+     */
+    public Object executeFunctionNew(String functionName, Map<String,Object> param){
+        Object result = null;
+        try{
+            JCoFunction function = jCoDestination.getRepository().getFunction(functionName);
+            //设置参数
+            if(MapUtils.isNotEmpty(param)){
+                JCoParameterList paramList = function.getImportParameterList();
+                param.forEach((k,v)->{
+                    info_log.info("k:{},v:{}",k,v);
+                    paramList.setValue(k, v);
+                });
+            }
+            function.execute(jCoDestination);
+            result = function.getExportParameterList().toString();
+            // 获取RFC返回的字段值
+            JCoParameterList exportParam = function.getExportParameterList();
+            JCoParameterFieldIterator it = exportParam.getParameterFieldIterator();
+            // 遍历RFC返回的表对象 TODO 字段和结果是否正确
+            JSONObject resultObj = new JSONObject(true);
+            info_log.info("tables:{}",function.getTableParameterList().toString());
+            JCoParameterList tables = function.getTableParameterList();
+            Iterator<JCoField> iterator = tables.iterator();
+            while (iterator.hasNext()){
+                JCoField j = iterator.next();
+                info_log.info("JCoField:{},name:{}", JSONUtils.toJson(j),j.getName());
+                JCoTable tb = j.getTable();
+                JCoRecordMetaData tableMeta = tb.getRecordMetaData();
+                for(int i = 0; i < tableMeta.getFieldCount(); i++){
+                    info_log.info(String.format("%s\t", tableMeta.getName(i)));
+                }
+
+                for (int i = 0; i < tb.getNumRows(); i++) {
+                    tb.setRow(i);
+                    JSONObject obj = new JSONObject();
+                    tb.forEach(f->{
+                        obj.put(f.getName(),f.getString());
+                    });
+                    info_log.info("obj:{}", obj.toJSONString());
+                }
+            }
         }catch (Exception e){
             info_log.error("调用jco函数报错,错误信息:{}", ExceptionUtils.getFullStackTrace(e));
         }
