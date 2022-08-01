@@ -12,6 +12,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +48,31 @@ public class HttpUtils {
     }
 
     /**
+     * 通过restTemplate请求formData数据
+     * @param url
+     * @param headers
+     * @param valueMap
+     * @return
+     */
+    public static AgHttpResult postFormDataByRT(String url,Map<String,String> headers, Map<String,String> valueMap){
+        AgHttpResult ar = new AgHttpResult();
+        RestTemplate client = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        headers.forEach((k,v)->{
+            header.add(k,v);
+        });
+        MultiValueMap<String,Object> multiValue = new LinkedMultiValueMap();
+        valueMap.forEach((k,v)->{
+            multiValue.add(k,v);
+        });
+        HttpEntity<MultiValueMap<String,Object>> multiEntity = new HttpEntity<>(multiValue,header);
+        ResponseEntity<String> result = client.exchange(url, HttpMethod.POST,multiEntity,String.class);
+        ar.setCode(result.getStatusCodeValue());
+        ar.setResult(result.getBody());
+        return ar;
+    }
+
+    /**
      * 调用http接口工具类
      * @param url
      * @param headers
@@ -74,7 +101,7 @@ public class HttpUtils {
         headers.put("Content-Type","application/x-www-form-urlencoded");
         return request2("POST",url,headers,params);
     }
-
+    
     /**
      * 调用http接口工具类
      * @param method

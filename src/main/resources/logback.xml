@@ -217,7 +217,7 @@
             </appender>
         </sift>
     </appender>
-    <logger name="c.h.m2m.edge.daemon.service.impl.AutoRefreshToken" level="ERROR" />
+    <logger name="c.h.m2m.edge.daemon.service.impl.AutoRefreshToken" level="OFF" />
 
     <logger name="TASK_INFO_LOG" additivity="false">
         <appender-ref ref="sitInfo"/>
