@@ -1,11 +1,13 @@
 package com.bsi.utils;
 
+import com.bsi.framework.core.httpclient.builder.HCB;
 import com.bsi.framework.core.httpclient.common.*;
 import com.bsi.framework.core.httpclient.utils.HttpClientUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.RequestUtils;
 import com.bsi.md.agent.entity.dto.AgHttpResult;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -130,7 +132,6 @@ public class HttpUtils {
         }
         return sendAndGetResult(config);
     }
-
     /**
      * 重定向
      */
@@ -141,6 +142,48 @@ public class HttpUtils {
             info_log.error("重定向报错:{}",ExceptionUtils.getFullStackTrace(e));
         }
 
+    }
+    
+    /**
+     * 调用http接口工具类
+     * @param url
+     * @param headers
+     * @param params
+     * @return AgHttpResult
+     */
+    public static AgHttpResult postFormWithoutCookies(String url, Map<String,String> headers, Map<String,Object> params){
+        if( MapUtils.isEmpty(headers) ){
+            headers = new HashMap<>();
+        }
+        headers.put("Content-Type","application/x-www-form-urlencoded");
+        return requestWithoutCookies("POST",url,headers,params);
+    }
+
+    /**
+     * 调用http接口工具类
+     * @param method
+     * @param url
+     * @param headers
+     * @param params
+     * @return AgHttpResult
+     */
+    public static AgHttpResult requestWithoutCookies(String method, String url, Map<String,String> headers, Map<String,Object> params){
+        HttpConfig config = buildHttpConfig(method,url,headers);
+        HttpClient client = null;
+        try{
+            if (config.url().toLowerCase().startsWith("https://")) {
+                client = HCB.custom().retry(2).disableCookieManagement().build();
+            } else {
+                client = HCB.custom().sslpv(SSLs.SSLProtocolVersion.TLSv1_2).ssl().retry(2).disableCookieManagement().build();
+            }
+        }catch (Exception e){
+            info_log.error("初始化httpclient报错,错误信息:{}",ExceptionUtils.getFullStackTrace(e));
+        }
+        if( MapUtils.isNotEmpty(params) ){
+            config.mapForce(params);
+        }
+        config.client(client);
+        return sendAndGetResult(config);
     }
 
     private static HttpConfig buildHttpConfig(String method, String url, Map<String,String> headers){

@@ -14,13 +14,9 @@ import com.bsi.md.agent.engine.factory.AgEngineFactory;
 import com.bsi.md.agent.engine.integration.AgIntegrationEngine;
 import com.bsi.md.agent.engine.integration.AgTaskBootStrap;
 import com.bsi.md.agent.engine.integration.Context;
-import com.bsi.md.agent.entity.AgConfig;
-import com.bsi.md.agent.entity.AgJob;
-import com.bsi.md.agent.entity.AgWarnMethod;
 import com.bsi.md.agent.entity.dto.*;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
 import com.bsi.md.agent.log.AgTaskLog;
-import com.bsi.md.agent.repository.AgConfigRepository;
 import com.bsi.md.agent.service.AgConfigService;
 import com.bsi.md.agent.service.AgDataSourceService;
 import com.bsi.md.agent.service.AgJobService;
@@ -37,7 +33,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,8 +57,6 @@ public class AgConfigController {
     private AgWarnMethodService agWarnMethodService;
     @Autowired
     private AgJobService agJobService;
-
-
 
     /**
      * 更新集成配置

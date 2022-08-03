@@ -1,10 +1,12 @@
 package com.bsi.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 
+import javax.servlet.http.Cookie;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -61,5 +63,17 @@ public class HttpRequestUtils {
             log.error("获取body参数报错,错误信息:{}", ExceptionUtils.getFullStackTrace(e));
         }
         return body;
+    }
+
+    /**
+     * 获取请求头参数
+     */
+    public static String getRequestCookies(){
+        Cookie[] cookies = RequestUtils.getRequest().getCookies();
+        String res = "";
+        if( cookies!=null ){
+            res = JSON.toJSONString(cookies);
+        }
+        return res;
     }
 }
