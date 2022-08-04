@@ -91,6 +91,7 @@ public class AgSapRFCTemplate implements AgDataSourceTemplate{
             if(MapUtils.isNotEmpty(param)){
                 JCoParameterList paramList = function.getImportParameterList();
                 param.forEach((k,v)->{
+                    info_log.info("k:{},v:{}",v.getClass().toString());
                     paramList.setValue(k, v);
                 });
             }
@@ -137,15 +138,14 @@ public class AgSapRFCTemplate implements AgDataSourceTemplate{
                 if(entity.getValue() instanceof ScriptObjectMirror){
                     Collection<Object> a = ((ScriptObjectMirror) entity.getValue()).values();
                     JSONArray arr = JSONArray.parseArray( JSON.toJSONString(a) );
-                    info_log.info("k:{},i:{}",entity.getKey(),row);
                     JCoTable inputTable = function.getTableParameterList().getTable(entity.getKey());
                     for (int j=0;j>arr.size();j++){
+                        inputTable.insertRow(row++);
                         JSONObject obj = arr.getJSONObject(j);
                         obj.forEach((k,v)->{
                             inputTable.setValue(k,v);
                         });
                     }
-                    inputTable.insertRow(row++);
                 }
             }
             function.execute(jCoDestination);
