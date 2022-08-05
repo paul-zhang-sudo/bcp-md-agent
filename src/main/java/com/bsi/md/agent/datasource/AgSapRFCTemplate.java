@@ -150,6 +150,8 @@ public class AgSapRFCTemplate implements AgDataSourceTemplate{
             function.getExportParameterList();
             JCoParameterList tables = function.getTableParameterList();
             Iterator<JCoField> iterator = tables.iterator();
+            info_log.info("tables:{}",tables.toXML());
+            info_log.info("tablesStr:{}",tables.toString());
             try{
                 if(function.getTableParameterList().getTable("ET_RETURN")!=null){
                     info_log.info("t2:{}",function.getTableParameterList().getTable("ET_RETURN").isEmpty());
@@ -177,7 +179,7 @@ public class AgSapRFCTemplate implements AgDataSourceTemplate{
                     detail.add(obj);
                     flag = tb.nextRow();
                 }
-                info_log.info("tb:{}",tb.toString());
+                info_log.info("tb:{}",tb.toXML());
 //                for (int i = 0; i < tb.getNumRows(); i++) {
 //                    tb.setRow(i);
 //                    JSONObject obj = new JSONObject();
