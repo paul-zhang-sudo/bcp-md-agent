@@ -85,14 +85,4 @@ public class HttpRequestUtils {
         }
         return res;
     }
-
-    public static OutputStream getRespWriter () throws IOException {
-        return RequestUtils.getResponse().getOutputStream();
-    }
-
-    public static void closeRespWriter (OutputStream outputStream) throws IOException {
-        outputStream.flush();
-        outputStream.close();
-    }
-
 }
