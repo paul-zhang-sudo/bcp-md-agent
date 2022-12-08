@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -143,7 +144,7 @@ public class HttpUtils {
         }
 
     }
-    
+
     /**
      * 调用http接口工具类
      * @param url
@@ -213,4 +214,36 @@ public class HttpUtils {
         }
         return result;
     }
+
+    /**
+     * 调用http接口工具类
+     * @param url
+     * @param headers
+     * @param body
+     * @return AgHttpResult
+     */
+    public static AgHttpResult postForStream(String url, Map<String,String> headers, String body){
+        if( MapUtils.isEmpty(headers) ){
+            headers = new HashMap<>();
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        headers.put("Content-Type","application/json");
+        HttpConfig config = buildHttpConfig("POST",url,headers);
+        config.out(out).json(body).headers(config.headers(),true);
+        AgHttpResult ar = new AgHttpResult();
+        try{
+            HttpClientUtil.down(config);
+            ar.setCode(200);
+            ar.setHeader(config.headers());
+            ar.setByteResult(out.toByteArray());
+            out.flush();
+            out.close();
+        }catch (Exception e){
+            info_log.error("请求流接口报错:{}",ExceptionUtils.getFullStackTrace(e));
+            ar.setCode(500);
+        }
+
+        return ar;
+    }
+
 }

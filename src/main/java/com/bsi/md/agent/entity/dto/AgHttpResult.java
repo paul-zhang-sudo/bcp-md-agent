@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 public class AgHttpResult {
     private Integer code;
     private String result;
+    private byte[] byteResult;
     private Header[] header;
     private HttpResponse resp;
 

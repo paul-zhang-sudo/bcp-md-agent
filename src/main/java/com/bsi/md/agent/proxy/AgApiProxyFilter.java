@@ -16,6 +16,7 @@ import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
 import com.bsi.md.agent.utils.AgApiProxyUtils;
 import com.bsi.md.agent.utils.AgConfigUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -25,6 +26,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -88,9 +90,16 @@ public class AgApiProxyFilter implements Filter {
             Object obj = AgTaskBootStrap.custom().context(context).engine(engine).exec();
             //设置body
             if(obj!=null){
-                response.getWriter().write( obj.toString() );
+                if(obj instanceof byte[]){
+                    OutputStream outputStream = response.getOutputStream();
+                    IOUtils.write((byte[])obj,outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+                }else {
+                    response.getWriter().write( obj.toString());
+                    response.getWriter().close();
+                }
             }
-            response.getWriter().close();
         }catch(Exception e){
             String errorId = UUID.randomUUID().toString();
             response.setStatus(FwHttpStatus.INTERNAL_SERVER_ERROR.value());
