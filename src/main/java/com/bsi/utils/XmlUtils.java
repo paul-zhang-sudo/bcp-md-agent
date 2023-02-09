@@ -235,7 +235,7 @@ public class XmlUtils {
             return AbstractMap.class.isAssignableFrom(aClass)|| AbstractList.class.isAssignableFrom(aClass);
         }
     }
-    public static  void main(String[] ars) throws Exception{
+//    public static  void main(String[] ars) throws Exception{
        // log.info( XmlUtils.xml2json(xml,"Envelope") );
 
 //        String xml = "<ufinterface billtype=\"supplier\" filename=\"supplier17ca11026ee0000zhenyun.xml\" isexchange=\"Y\" replace=\"Y\" roottag=\"sendresult\" sender=\"zhenyun\" successful=\"N\">\n" +
@@ -284,5 +284,5 @@ public class XmlUtils {
 //                "  </list>\n" +
 //                "</com.alibaba.fastjson.JSONArray>";
 //        log.info( xml2json( xml ) );
-    }
+//    }
 }
