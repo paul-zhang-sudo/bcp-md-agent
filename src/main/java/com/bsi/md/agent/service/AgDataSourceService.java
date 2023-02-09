@@ -8,14 +8,18 @@ import com.bsi.framework.core.utils.EHCacheUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.StringUtils;
 import com.bsi.md.agent.constant.AgConstant;
-import com.bsi.md.agent.datasource.*;
+import com.bsi.md.agent.datasource.AgApiTemplate;
+import com.bsi.md.agent.datasource.AgApiUpTemplate;
+import com.bsi.md.agent.datasource.AgDatasourceContainer;
+import com.bsi.md.agent.datasource.AgJdbcTemplate;
+import com.bsi.md.agent.datasource.AgKafkaTemplate;
+import com.bsi.md.agent.datasource.AgSapRFCTemplate;
 import com.bsi.md.agent.entity.AgDataSource;
 import com.bsi.md.agent.entity.dto.AgDataSourceDto;
 import com.bsi.md.agent.ot.AgDcDriver;
 import com.bsi.md.agent.repository.AgDataSourceRepository;
 import com.bsi.md.agent.utils.AgJasyptUtils;
 import com.bsi.utils.DecryptUtils;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +86,7 @@ public class AgDataSourceService extends FwService {
                                     value = AgJasyptUtils.decode(AgJasyptUtils.PWD,value);
                                 }
                             }
-                           prop.put( o.getString("key"),value );
+                            prop.put( o.getString("key"),value );
                         }
                         AgDatasourceContainer.setDSProperties(ds.getId(),prop);
                     }

@@ -11,12 +11,18 @@ import com.bsi.md.agent.service.AgDataSourceService;
 import com.huaweicloud.sdk.iot.module.DcClient;
 import com.huaweicloud.sdk.iot.module.ModuleShadowNotificationCallback;
 import com.huaweicloud.sdk.iot.module.PointsCallback;
-import com.huaweicloud.sdk.iot.module.dto.*;
+import com.huaweicloud.sdk.iot.module.dto.DsConnectionState;
+import com.huaweicloud.sdk.iot.module.dto.ModuleShadowNotification;
+import com.huaweicloud.sdk.iot.module.dto.PointsGetReq;
+import com.huaweicloud.sdk.iot.module.dto.PointsGetRsp;
+import com.huaweicloud.sdk.iot.module.dto.PointsSetReq;
+import com.huaweicloud.sdk.iot.module.dto.PointsSetRsp;
 import com.huaweicloud.sdk.iot.module.transport.ConnectionStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.annotation.PostConstruct;
 
 @Slf4j

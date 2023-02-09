@@ -1,9 +1,14 @@
 package com.bsi.md.agent.sap;
 
 import com.bsi.framework.core.utils.ExceptionUtils;
-import com.sap.conn.jco.*;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.ext.Environment;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.Properties;
 
 /**

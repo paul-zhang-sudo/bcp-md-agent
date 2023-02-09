@@ -1,4 +1,5 @@
 package com.bsi.md.agent.datasource;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
@@ -11,7 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * sapRfc类型数据源模板

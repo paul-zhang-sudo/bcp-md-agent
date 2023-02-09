@@ -1,8 +1,6 @@
 package com.bsi.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.thoughtworks.xstream.XStream;
@@ -11,21 +9,21 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.json.JsonWriter;
-import com.thoughtworks.xstream.io.naming.NameCoder;
 import com.thoughtworks.xstream.io.xml.Dom4JDriver;
-import com.thoughtworks.xstream.io.xml.Dom4JXmlWriter;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
-import org.dom4j.io.OutputFormat;
 
-import javax.xml.stream.XMLOutputFactory;
-import java.util.*;
+import java.util.AbstractList;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -234,7 +232,7 @@ public class XmlUtils {
 
         @Override
         public boolean canConvert(Class aClass) {
-            return AbstractMap.class.isAssignableFrom(aClass)||AbstractList.class.isAssignableFrom(aClass);
+            return AbstractMap.class.isAssignableFrom(aClass)|| AbstractList.class.isAssignableFrom(aClass);
         }
     }
     public static  void main(String[] ars) throws Exception{

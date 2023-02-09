@@ -5,7 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.md.agent.sap.AgRFCManager;
-import com.sap.conn.jco.*;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoField;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoTable;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.Data;
@@ -13,7 +17,11 @@ import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * sapRfc类型数据源模板

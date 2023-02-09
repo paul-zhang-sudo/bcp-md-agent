@@ -1,8 +1,11 @@
 package com.bsi.md.agent.log;
 
-import com.bsi.framework.core.schedule.FwTaskLog;
 import com.bsi.framework.core.utils.IpUtils;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 @Builder

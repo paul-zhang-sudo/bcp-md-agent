@@ -1,7 +1,11 @@
 package com.bsi.utils;
 
 import com.bsi.framework.core.httpclient.builder.HCB;
-import com.bsi.framework.core.httpclient.common.*;
+import com.bsi.framework.core.httpclient.common.HttpConfig;
+import com.bsi.framework.core.httpclient.common.HttpHeader;
+import com.bsi.framework.core.httpclient.common.HttpMethods;
+import com.bsi.framework.core.httpclient.common.HttpResult;
+import com.bsi.framework.core.httpclient.common.SSLs;
 import com.bsi.framework.core.httpclient.utils.HttpClientUtil;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import com.bsi.framework.core.utils.RequestUtils;
@@ -17,7 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import java.io.*;
+
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
