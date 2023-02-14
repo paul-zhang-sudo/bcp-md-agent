@@ -56,6 +56,25 @@ public class HttpUtils {
     }
 
     /**
+     * 通过restTemplate请求数据
+     * @param url
+     * @param headers
+     * @param body
+     * @return
+     */
+    public static AgHttpResult requestByRestTemplate(String method,String url,Map<String,String> headers, String body){
+        AgHttpResult ar = new AgHttpResult();
+        RestTemplate client = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        headers.forEach(header::add);
+        HttpEntity<String> strEntity = new HttpEntity<String>(body,header);
+        ResponseEntity<String> result = client.exchange(url, HttpMethod.valueOf(method),strEntity,String.class);
+        ar.setCode(result.getStatusCodeValue());
+        ar.setResult(result.getBody());
+        return ar;
+    }
+
+    /**
      * 通过restTemplate请求formData数据
      * @param url
      * @param headers
