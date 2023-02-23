@@ -32,7 +32,3 @@ spring:
     show-sql: true
     thymeleaf:
       cache: false
-
-jasypt:
-  encryptor:
-    password: FElzKb2pGHg0QNqSpX2MHs08
