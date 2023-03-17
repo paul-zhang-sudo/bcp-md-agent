@@ -4,17 +4,21 @@ import com.bsi.framework.core.utils.ExceptionUtils;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.crypto.CipherParameters;
+import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ParametersWithID;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.jce.ECNamedCurveTable;
-import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Enumeration;
 
@@ -43,29 +47,15 @@ public class SignatureUtils {
         return null;
     }
 
-    /**
-     * sm2加密
-     * @param authoritySecret
-     * @param signStr sm3加密出来的字符串
-     * @return String
-     * @throws Exception
-     */
-    public static String sm2Signature(String authoritySecret, String signStr){
-
-        byte[] key = Hex.decode(authoritySecret);
-        byte[] data = signStr.getBytes();
-
-        // 获得一条签名曲线
-        ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("sm2p256v1");
-        // 构造domain函数
-        ECDomainParameters domainParameters = new ECDomainParameters(spec.getCurve(), spec.getG(), spec.getN(), spec.getH(), spec.getSeed());
-
-        // 国密要求，ID默认值为1234567812345678
+    public static String sm2Signature(String privateKeyStr, String dataStr) throws CryptoException, IOException {
+        byte[] key = Hex.decode(privateKeyStr);
+        byte[] data = dataStr.getBytes("UTF-8");
+        ECNamedCurveParameterSpec eCNamedCurveParameterSpec = ECNamedCurveTable.getParameterSpec("sm2p256v1");
+        ECDomainParameters domainParameters = new ECDomainParameters(eCNamedCurveParameterSpec.getCurve(), eCNamedCurveParameterSpec.getG(), eCNamedCurveParameterSpec.getN(), eCNamedCurveParameterSpec.getH(), eCNamedCurveParameterSpec.getSeed());
         ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters(new BigInteger(1, key), domainParameters);
-        ParametersWithID parameters = new ParametersWithID(privateKey, "1234567812345678".getBytes());
-        // 初始化签名实例
+        ParametersWithID parameters = new ParametersWithID((CipherParameters) privateKey, "1234567812345678".getBytes());
         SM2Signer signer = new SM2Signer();
-        signer.init(true, parameters);
+        signer.init(true, (CipherParameters)parameters);
         signer.update(data, 0, data.length);
         try{
             return Hex.toHexString(decodeDERSignature(signer.generateSignature()));
@@ -75,12 +65,12 @@ public class SignatureUtils {
         return null;
     }
 
-    private static byte[] decodeDERSignature(byte[] signature) throws Exception {
+    private static byte[] decodeDERSignature(byte[] signature) throws IOException {
         ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(signature));
-        ASN1Sequence primitive = (ASN1Sequence) stream.readObject();
-        Enumeration enumeration = primitive.getObjects();
-        BigInteger R = ((ASN1Integer) enumeration.nextElement()).getValue();
-        BigInteger S = ((ASN1Integer) enumeration.nextElement()).getValue();
+        ASN1Sequence primitive = (ASN1Sequence)stream.readObject();
+        Enumeration<ASN1Integer> enumeration = primitive.getObjects();
+        BigInteger R = ((ASN1Integer)enumeration.nextElement()).getValue();
+        BigInteger S = ((ASN1Integer)enumeration.nextElement()).getValue();
         byte[] bytes = new byte[64];
         byte[] r = format(R.toByteArray());
         byte[] s = format(S.toByteArray());
@@ -90,16 +80,14 @@ public class SignatureUtils {
     }
 
     private static byte[] format(byte[] value) {
-        if (value.length == 32) {
+        if (value.length == 32)
             return value;
+        byte[] bytes = new byte[32];
+        if (value.length > 32) {
+            System.arraycopy(value, value.length - 32, bytes, 0, 32);
         } else {
-            byte[] bytes = new byte[32];
-            if (value.length > 32) {
-                System.arraycopy(value, value.length - 32, bytes, 0, 32);
-            } else {
-                System.arraycopy(value, 0, bytes, 32 - value.length, value.length);
-            }
-            return bytes;
+            System.arraycopy(value, 0, bytes, 32 - value.length, value.length);
         }
+        return bytes;
     }
 }
