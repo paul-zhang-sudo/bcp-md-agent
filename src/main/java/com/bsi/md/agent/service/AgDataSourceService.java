@@ -13,6 +13,7 @@ import com.bsi.md.agent.datasource.AgApiUpTemplate;
 import com.bsi.md.agent.datasource.AgDatasourceContainer;
 import com.bsi.md.agent.datasource.AgJdbcTemplate;
 import com.bsi.md.agent.datasource.AgKafkaTemplate;
+import com.bsi.md.agent.datasource.AgPulsarTemplate;
 import com.bsi.md.agent.datasource.AgSapRFCTemplate;
 import com.bsi.md.agent.entity.AgDataSource;
 import com.bsi.md.agent.entity.dto.AgDataSourceDto;
@@ -130,10 +131,15 @@ public class AgDataSourceService extends FwService {
                         if(StringUtils.hasText(otherParam)){
                             map = JSONObject.parseObject(otherParam,Map.class);
                         }
-                        //String servers, String groupId, String autoCommit, String autoCommitInterval,String autoOffset ,String keyDecode, String classDecode
-                        AgKafkaTemplate kafkaTemplate = new AgKafkaTemplate(config.getString("servers"),config.getString("groupId"),(String) config.getOrDefault("autoCommit","true"),
-                                "2000","latest","org.apache.kafka.common.serialization.StringDeserializer","org.apache.kafka.common.serialization.StringDeserializer",map);
-                        AgDatasourceContainer.addKafkaDataSource(ds.getId(),kafkaTemplate);
+                        if( "kafka".equals( ds.getClassify() ) ){
+                            //String servers, String groupId, String autoCommit, String autoCommitInterval,String autoOffset ,String keyDecode, String classDecode
+                            AgKafkaTemplate kafkaTemplate = new AgKafkaTemplate(config.getString("servers"),config.getString("groupId"),(String) config.getOrDefault("autoCommit","true"),
+                                    "2000","latest","org.apache.kafka.common.serialization.StringDeserializer","org.apache.kafka.common.serialization.StringDeserializer",map);
+                            AgDatasourceContainer.addKafkaDataSource(ds.getId(),kafkaTemplate);
+                        }else if("pulsar".equals( ds.getClassify() )){
+                            AgPulsarTemplate pulsarTemplate = new AgPulsarTemplate(config.getString("servers"),config.getString("groupId"),map);
+                            AgDatasourceContainer.addPulsarDataSource(ds.getId(),pulsarTemplate);
+                        }
                     }
                 }
             }

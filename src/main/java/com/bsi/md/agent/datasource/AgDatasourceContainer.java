@@ -16,6 +16,7 @@ public class AgDatasourceContainer {
     private static Map<String, AgSapRFCTemplate> sapRfcMap = new HashMap<>();
     private static Map<String, JSONObject> propertiesMap = new HashMap<>();
     private static Map<String, AgKafkaTemplate> kafkaMap = new HashMap<>();
+    private static Map<String, AgPulsarTemplate> pulsarMap = new HashMap<>();
 
     /**
      * 获取数据源属性
@@ -76,6 +77,12 @@ public class AgDatasourceContainer {
         kafkaMap.clear();
     }
     /**
+     * 清空pulsar数据源map
+     */
+    public static void clearPulsarDataSource(){
+        pulsarMap.clear();
+    }
+    /**
      * 添加一个jdbc数据源
      * @param key
      * @param template
@@ -102,6 +109,7 @@ public class AgDatasourceContainer {
         clearJdbcDataSource();
         clearSapRfcDataSource();
         clearKafkaDataSource();
+        clearPulsarDataSource();
         propertiesMap.clear();
     }
 
@@ -140,6 +148,14 @@ public class AgDatasourceContainer {
         return kafkaMap.get(key);
     }
     /**
+     * 获取pulsar数据源
+     * @param key
+     * @return
+     */
+    public static AgPulsarTemplate getPulsarDataSource(String key){
+        return pulsarMap.get(key);
+    }
+    /**
      * 添加一个sapRFC数据源
      * @param key
      * @param template
@@ -154,6 +170,14 @@ public class AgDatasourceContainer {
      */
     public static void addKafkaDataSource(String key,AgKafkaTemplate template){
         kafkaMap.put(key,template);
+    }
+    /**
+     * 添加一个pulsar数据源
+     * @param key
+     * @param template
+     */
+    public static void addPulsarDataSource(String key,AgPulsarTemplate template){
+        pulsarMap.put(key,template);
     }
 
     /**

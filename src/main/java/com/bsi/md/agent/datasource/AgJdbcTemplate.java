@@ -1,6 +1,5 @@
 package com.bsi.md.agent.datasource;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.bsi.framework.core.jdbc.FwJdbcTemplate;
 import com.bsi.framework.core.service.FwService;
 import com.bsi.framework.core.utils.CollectionUtils;

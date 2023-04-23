@@ -21,6 +21,8 @@ public class AgConstant {
     public static final String AG_NODETYPE_APIUP = "apiUp";
     public static final String AG_NODETYPE_SAPRFC = "sapRFC";
     public static final String AG_NODETYPE_MQ = "mq";
+    public static final String AG_NODETYPE_KAFKA = "kafka";
+    public static final String AG_NODETYPE_PULSAR = "pulsar";
 
     //数据库分类
     public static final String AG_CLASSIFY_DB_SQLSERVER = "sqlserver";
