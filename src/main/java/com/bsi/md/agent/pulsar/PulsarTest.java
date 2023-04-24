@@ -37,7 +37,7 @@ public class PulsarTest {
             try {
                 PulsarConsumerSimulator consumer = new PulsarConsumerSimulator("my-topic",client);
                 while (true) {
-                    Message<byte[]> msg = consumer.receive();
+                    Message<byte[]> msg = consumer.receive(true);
                     System.out.printf("Consumed message: %s%n", msg==null?"null":new String(msg.getValue()));
                 }
             } catch (Exception e) {
