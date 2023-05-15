@@ -4,6 +4,9 @@ import lombok.Data;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * http结果返回值
  */
@@ -23,5 +26,10 @@ public class AgHttpResult {
     public Header getHeader(String headerName){
         Header[] headers = this.resp.getHeaders(headerName);
         return headers != null && headers.length > 0 ? headers[0] : null;
+    }
+
+    public Header getHeaderFromHeaders(String headerName){
+        Optional<Header> resHeader = Arrays.stream(header).filter(v-> headerName.equals(v.getName())).findFirst();
+        return resHeader.orElse(null);
     }
 }
