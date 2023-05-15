@@ -14,13 +14,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
@@ -83,30 +83,41 @@ public class HttpUtils {
      * @param body
      * @return
      */
-    public static AgHttpResult requestByRestTemplateHttps(String method,String url,Map<String,String> headers, String body) throws Exception {
+    public static AgHttpResult requestByRestTemplateHttps(String method,String url,Map<String,String> headers, String body) {
         AgHttpResult ar = new AgHttpResult();
-        RestTemplate client = new RestTemplate();
-        client.setRequestFactory(new HttpComponentsClientHttpRequestFactory(
-                HttpClientBuilder.create()
-                        .setSSLContext(SSLContextBuilder.create()
-                                .loadTrustMaterial(new TrustAllStrategy())
-                                .build())
-                        .setSSLHostnameVerifier(new NoopHostnameVerifier())
-                        .build()));
-        HttpHeaders header = new HttpHeaders();
-        headers.forEach(header::add);
-        HttpEntity<String> strEntity = new HttpEntity<>(body, header);
-        ResponseEntity<String> result = client.exchange(url, HttpMethod.valueOf(method),strEntity,String.class);
-        ar.setCode(result.getStatusCodeValue());
-        ar.setResult(result.getBody());
+        try{
+            RestTemplate client = new RestTemplate();
+            client.setRequestFactory(new HttpComponentsClientHttpRequestFactory(
+                    HttpClientBuilder.create()
+                            .setSSLContext(SSLContextBuilder.create()
+                                    .loadTrustMaterial(new TrustAllStrategy())
+                                    .build())
+                            .setSSLHostnameVerifier(new NoopHostnameVerifier())
+                            .build()));
+            HttpHeaders header = new HttpHeaders();
+            headers.forEach(header::add);
+            HttpEntity<String> strEntity = new HttpEntity<>(body, header);
+            ResponseEntity<String> result = client.exchange(url, HttpMethod.valueOf(method),strEntity,String.class);
+            ar.setCode(result.getStatusCodeValue());
+            ar.setResult(result.getBody());
 
-        HttpHeader resHeader = HttpHeader.custom();
-        if( MapUtils.isNotEmpty(result.getHeaders()) ){
-            for(Map.Entry<String, List<String>> entrySet : result.getHeaders().entrySet()){
-                resHeader.other(entrySet.getKey(),entrySet.getValue().size() > 0 ? entrySet.getValue().get(0) : null);
+            HttpHeader resHeader = HttpHeader.custom();
+            if( MapUtils.isNotEmpty(result.getHeaders()) ){
+                for(Map.Entry<String, List<String>> entrySet : result.getHeaders().entrySet()){
+                    resHeader.other(entrySet.getKey(),entrySet.getValue().size() > 0 ? entrySet.getValue().get(0) : null);
+                }
             }
+            ar.setHeader(resHeader.build());
+        }catch (HttpClientErrorException | HttpServerErrorException e){
+            ar.setCode(e.getStatusCode().value());
+            ar.setResult(e.getResponseBodyAsString());
+        }catch (ResourceAccessException e){
+            ar.setCode(HttpStatus.REQUEST_TIMEOUT.value());
+            ar.setResult(HttpStatus.REQUEST_TIMEOUT.getReasonPhrase());
+        }catch (Exception e){
+            ar.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            ar.setResult(e.getMessage());
         }
-        ar.setHeader(resHeader.build());
         return ar;
     }
 
