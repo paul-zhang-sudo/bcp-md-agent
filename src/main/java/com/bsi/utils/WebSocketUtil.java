@@ -25,7 +25,7 @@ public class WebSocketUtil {
                 @Override
                 public void onMessage(String message) {
                     list.add(message);
-                    System.out.println("Received message: " + message);
+                    System.out.println("Received message ");
                 }
 
                 @Override
