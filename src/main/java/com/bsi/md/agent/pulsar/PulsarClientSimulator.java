@@ -23,7 +23,7 @@ public class PulsarClientSimulator {
             "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"
     );
 
-    private static PulsarClient pulsarClient;
+    private PulsarClient pulsarClient;
 
     private final String pulsarUrl;
 
