@@ -8,7 +8,7 @@ import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
  */
 public class AgJasyptUtils {
 
-    public static String PWD = "BSIFElzKbBCPQNqSpX2022";
+    public static String YNZ = "BSIFElzKbBCPQNqSpX2022";
     /**
      * Jasypt生成加密结果
      * @param password 配置文件中设定的加密盐值

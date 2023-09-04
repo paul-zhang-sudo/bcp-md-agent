@@ -79,7 +79,7 @@ public class AgDataSourceService extends FwService {
                                 if(StringUtils.hasText( o.getString("source") ) && "ot".equals(o.getString("source"))){
                                     value = agDcDriver.getDcClient().decryptDataFromCloud(value);
                                 }else {
-                                    value = AgJasyptUtils.decode(AgJasyptUtils.PWD,value);
+                                    value = AgJasyptUtils.decode(AgJasyptUtils.YNZ,value);
                                 }
                             }
                             prop.put( o.getString("key"),value );

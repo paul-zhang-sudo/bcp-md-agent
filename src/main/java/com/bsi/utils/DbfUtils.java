@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,8 +24,9 @@ public class DbfUtils {
         File dbfFile = new File(filePath);
         List<Map<String, Object>> resultList = new ArrayList<>();
         DBFReader reader = null;
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(dbfFile);
+            fis = new FileInputStream(dbfFile);
             reader = new DBFReader(fis, Charset.forName(charSet));
             reader.skipRecords(skipRecords);
             DBFRow row;
@@ -44,8 +46,14 @@ public class DbfUtils {
         }catch (Exception e){
             info_log.info("read DBF file error, msg:{}", ExceptionUtils.getFullStackTrace(e));
         }finally {
-            if (reader!=null){
+            if (reader!=null) {
                 reader.close();
+            }
+            if( fis!=null ){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                }
             }
         }
         return resultList;
