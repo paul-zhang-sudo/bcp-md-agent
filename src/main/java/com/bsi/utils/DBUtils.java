@@ -4,6 +4,7 @@ import com.bsi.framework.core.vo.resp.PageResp;
 import com.bsi.md.agent.datasource.AgDatasourceContainer;
 import com.bsi.md.agent.datasource.AgJdbcTemplate;
 import com.github.pagehelper.PageHelper;
+import jdk.nashorn.internal.objects.NativeArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +64,13 @@ public class DBUtils {
      * @param dataSourceId 数据源id
      * @return int 更新数量
      */
-    public static int[] executeBatch(String sql, List<List<Object>> args, String dataSourceId){
+    public static int[] executeBatch(String sql, Object[] args, String dataSourceId){
         AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
         List<Object[]> list = new ArrayList<>();
-        args.forEach(
-               objects ->  list.add(objects.toArray())
-        );
+        for(Object obj:args){
+            NativeArray arr = (NativeArray) obj;
+            list.add(arr.asObjectArray());
+        }
         return template.getJdbcTemplate().batchUpdate(sql, list);
     }
 
