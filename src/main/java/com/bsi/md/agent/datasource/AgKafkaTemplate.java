@@ -2,6 +2,7 @@ package com.bsi.md.agent.datasource;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bsi.framework.core.utils.ExceptionUtils;
 import lombok.Data;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -9,11 +10,14 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +50,7 @@ public class AgKafkaTemplate implements AgDataSourceTemplate{
     private String autoCommitInterval;
 
     private String autoOffset;
-
+    private String valueDecode = "org.apache.kafka.common.serialization.StringSerializer";
     //
     private String keyDecode = "org.apache.kafka.common.serialization.StringDeserializer";
 
@@ -58,6 +63,8 @@ public class AgKafkaTemplate implements AgDataSourceTemplate{
     //jco
     private Map<String,KafkaConsumer> consumerMap = new HashMap<>();
 
+    private Map<String, KafkaProducer> producerMap = new HashMap<>();
+
     public AgKafkaTemplate(String servers, String groupId, String autoCommit, String autoCommitInterval,String autoOffset ,String keyDecode, String classDecode, Map<String,String> otherParams){
         this.servers = servers;
         this.groupId = groupId;
@@ -67,6 +74,17 @@ public class AgKafkaTemplate implements AgDataSourceTemplate{
         this.keyDecode = keyDecode;
         this.classDecode = classDecode;
         this.otherParams = otherParams;
+    }
+    private KafkaProducer getProducer(){
+        Properties properties = new Properties();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, this.servers);
+        properties.put(ProducerConfig.CLIENT_ID_CONFIG, this.groupId);
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, this.valueDecode);
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, this.valueDecode);
+        if( MapUtils.isNotEmpty(otherParams) ){
+            otherParams.forEach((k,v)-> properties.setProperty(k,v) );
+        }
+        return new KafkaProducer(properties);
     }
 
     private KafkaConsumer getConsumer(){
@@ -84,7 +102,30 @@ public class AgKafkaTemplate implements AgDataSourceTemplate{
         }
         return new KafkaConsumer<>(properties);
     }
-
+    /**
+     * 发送kafka消息
+     * @param key
+     * @param topic
+     * @return
+     */
+    public Object send(String producerKey,String topic,String key,String msg){
+        KafkaProducer producer = producerMap.get(producerKey);
+        if(producer==null){
+            producer = getProducer();
+            producerMap.put(producerKey,producer);
+        }
+        ProducerRecord producerRecord = new ProducerRecord<>(topic,key,msg);
+        Future future = producer.send(producerRecord);
+        String result = "";
+        try {
+            RecordMetadata recordMetadata = (RecordMetadata) future.get();
+            result = String.format("send msg success. topic: %s ,offset: %s, partition: %s", recordMetadata.topic(),recordMetadata.offset(),recordMetadata.partition());
+        }catch (Exception e){
+            info_log.info("kafka消息发送失败:{}", ExceptionUtils.getFullStackTrace(e));
+            result = "send msg fail.";
+        }
+        return result;
+    }
     /**
      * 按照时间范围读取历史数据
      * @param topic

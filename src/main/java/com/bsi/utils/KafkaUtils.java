@@ -37,6 +37,16 @@ public class KafkaUtils {
     }
 
     /**
+     * 写入数据
+     * @param dataSourceId 数据源id
+     * @param topic 主题
+     */
+    public static Object send(String dataSourceId,String taskId,String topic,String key,String msg){
+        AgKafkaTemplate template = AgDatasourceContainer.getKafkaDataSource(dataSourceId);
+        return template.send(dataSourceId+"|"+taskId,topic,key,msg);
+    }
+
+    /**
      * 手动提交offset
      * @param dataSourceId
      * @param taskId
