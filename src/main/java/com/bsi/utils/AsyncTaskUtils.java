@@ -21,4 +21,18 @@ public class AsyncTaskUtils {
         task.setParam(param);
         AgAsynchronousApiPool.commit(task);
     }
+
+    /**
+     * 异步执行指定任务单线程排队执行
+     * @param taskId 任务id
+     * @param taskName 任务名称
+     * @param param 执行参数
+     */
+    public static void singleExec(String taskId,String taskName,String param){
+        AgTaskRun task = new AgTaskRun();
+        task.setTaskId(taskId);
+        task.setName(taskName);
+        task.setParam(param);
+        AgAsynchronousApiPool.commitSingle(task);
+    }
 }

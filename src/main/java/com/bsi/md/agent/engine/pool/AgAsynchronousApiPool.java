@@ -9,8 +9,13 @@ import java.util.concurrent.Executors;
  */
 public class AgAsynchronousApiPool {
 	public static ExecutorService apiPool = Executors.newFixedThreadPool(5);
-	
-	public static void commit(Runnable task){
+	public static ExecutorService singlePool = Executors.newSingleThreadExecutor();
+
+	public static void commit(Runnable task) {
 		apiPool.submit(task);
+	}
+
+	public static void commitSingle(Runnable task) {
+		singlePool.submit(task);
 	}
 }
