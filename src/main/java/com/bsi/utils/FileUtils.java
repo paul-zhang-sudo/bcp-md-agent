@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -25,9 +27,13 @@ public class FileUtils {
      * @return
      */
     public static List<String> readFile(String path){
+        return readFileByCharset(path,"UTF-8");
+    }
+
+    public static List<String> readFileByCharset(String path,String charsets){
         List<String> resultLines = null;
         try{
-            resultLines = org.apache.commons.io.FileUtils.readLines(new File(path),StandardCharsets.UTF_8);
+            resultLines = org.apache.commons.io.FileUtils.readLines(new File(path), Charset.forName(charsets));
         }catch (Exception e){
             log.error("读取文件{}报错,错误信息:", ExceptionUtils.getFullStackTrace(e));
         }
