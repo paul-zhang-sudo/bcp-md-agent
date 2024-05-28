@@ -133,7 +133,9 @@ public class SocketServer {
                         out.flush();
                     }
                 }else{
-                    info_log.info("line:{}",line);
+                    if(line!=null) {
+                        info_log.info("line:{}", line);
+                    }
                 }
             }
         } catch (IOException e) {
