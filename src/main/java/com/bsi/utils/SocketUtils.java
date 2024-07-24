@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class SocketUtils {
     private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     private static HashMap<String,SocketClient> clientMap = new HashMap<>();
-    private static HashMap<String,SocketServer> serverMap = new HashMap<>();
+    private static HashMap<String,SocketServerN> serverMap = new HashMap<>();
 
     /**
      * 生产socket客户端
@@ -46,16 +46,16 @@ public class SocketUtils {
      * @param port
      * @return
      */
-    public static SocketServer createServer(String key,int port,int maxClient,String serverNo,String clientNo,boolean callBack){
+    public static SocketServerN createServer(String key,int port,int maxClient,String protocol,boolean callBack){
         info_log.info("key:{},port:{}",key,port);
-        SocketServer server = serverMap.get(key);
+        SocketServerN server = serverMap.get(key);
         info_log.info("server:{}",server);
         if(server==null){
             info_log.info("server对象不存在,创建新的server对象");
-            server = new SocketServer();
+            server = new SocketServerN();
             try {
                 serverMap.put(key,server);
-                server.start(port,maxClient,callBack,serverNo,clientNo);
+                server.start(port,maxClient,protocol,callBack);
             }catch (Exception e) {
                 info_log.error("连接socket服务报错:{}", ExceptionUtils.getFullStackTrace(e));
             }
@@ -68,9 +68,9 @@ public class SocketUtils {
      * @param key
      * @return
      */
-    public static SocketServer getServer(String key){
+    public static SocketServerN getServer(String key){
         info_log.info("key:{}",key);
-        SocketServer server = serverMap.get(key);
+        SocketServerN server = serverMap.get(key);
         info_log.info("server:{}",server);
         return server;
     }

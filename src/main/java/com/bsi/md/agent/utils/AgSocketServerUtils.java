@@ -1,6 +1,19 @@
 package com.bsi.md.agent.utils;
 
+import com.bsi.utils.DateUtils;
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
+
 public class AgSocketServerUtils {
+    private static final byte MSG_DELIMITER_00 = 0x00;
+    private static final byte MGS_DELIMITER_0a = 0x0a;
+
+    private static final String PROTOCOL_XGGY = "XGGY"; //湘钢规约
+    private static final String PROTOCOL_JTGY = "JTGY"; //静态规约
+
+    private static Map<String,Byte> delimiterMap = ImmutableMap.of(PROTOCOL_XGGY,MSG_DELIMITER_00,PROTOCOL_JTGY,MGS_DELIMITER_0a);
+
     public static String stringToHex(String inputStr) {
         StringBuilder hexBuilder = new StringBuilder();
         for (char ch : inputStr.toCharArray()) {
@@ -24,11 +37,51 @@ public class AgSocketServerUtils {
         return output.toString();
     }
 
-    public static String space80(){
+    public static String spaceX(int x){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 80; i++) {
+        for (int i = 0; i < x; i++) {
             sb.append(' ');
         }
         return sb.toString();
     }
+
+    public static String getAckMsg(String protocol,String msgNo){
+        String clientNo = msgNo.substring(0,2);
+        String serverNo = msgNo.substring(2,4);
+        String strDate = DateUtils.nowDate("yyyyMMddhhmmss");
+        String msg = "";
+        switch (protocol.toUpperCase()) {
+            case "XGGY":
+                //湘钢规约
+                msg = handleXGGY(msgNo,strDate,clientNo,serverNo);
+                break;
+            case "JTGY":
+                //静态规约
+                msg = handleJTGY(msgNo,strDate,clientNo,serverNo);
+                break;
+        }
+        return msg;
+    }
+
+    public static Byte getDelimiter(String protocol){
+        return delimiterMap.get(protocol);
+    }
+
+    private static String handleXGGY(String msgNo,String strDate,String clientNo,String serverNo){
+        StringBuilder callBackMsg = new StringBuilder();
+        callBackMsg.append("0041").append("999998").append(strDate.substring(0,8));
+        callBackMsg.append(strDate.substring(8,14)).append(serverNo).append(clientNo).append("0000").append(AgSocketServerUtils.spaceX(8));
+        callBackMsg.append(AgSocketServerUtils.hexToString("00"));
+        return callBackMsg.toString();
+    }
+
+    private static String handleJTGY(String msgNo,String strDate,String clientNo,String serverNo){
+        StringBuilder callBackMsg = new StringBuilder();
+        callBackMsg.append("0110").append(msgNo).append(strDate.substring(0,8));
+        callBackMsg.append(strDate.substring(8,14)).append(serverNo).append(clientNo).append("A").append(AgSocketServerUtils.spaceX(80));
+        callBackMsg.append(AgSocketServerUtils.hexToString("0a"));
+        return callBackMsg.toString();
+    }
+
+
 }
