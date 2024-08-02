@@ -19,6 +19,19 @@ public class PulsarUtils {
     }
 
     /**
+     * 根据主题批量拉取数据
+     * @param dataSourceId 数据源id
+     * @param topic 主题
+     * @param receiverQueueSize 接收队列大小
+     * @param maxNumMessages  每次接收消息最大条数
+     * @param  maxNumBytes 每次接收消息最大字节
+     */
+    public static Object batchPoll(String dataSourceId,String taskId,String topic,int receiverQueueSize,int maxNumMessages,int maxNumBytes,int pullTimeout,int ackTimeout){
+        AgPulsarTemplate template = AgDatasourceContainer.getPulsarDataSource(dataSourceId);
+        return template.pollMany(dataSourceId+"-"+taskId,topic,receiverQueueSize,maxNumMessages,maxNumBytes,pullTimeout,ackTimeout);
+    }
+
+    /**
      * 根据主题查询数据
      * @param dataSourceId 数据源id
      * @param topic 主题
