@@ -1,9 +1,9 @@
 package com.bsi.md.agent.init;
 
-import com.bsi.framework.core.httpclient.utils.IoTEdgeUtil;
 import com.bsi.md.agent.service.AgDataSourceService;
 import com.bsi.md.agent.service.AgJobService;
 import com.bsi.md.agent.service.AgWarnMethodService;
+import com.bsi.md.agent.utils.IoTEdgeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -36,7 +36,7 @@ public class AgConfigInit implements ApplicationRunner {
 	public void run(ApplicationArguments args) {
 		log.info("=======================开始初始化数据源和集成配置信息=======================");
 		try {
-			IoTEdgeUtil.getItClient();
+			IoTEdgeUtil.getDriverClient();
 			log.info("=======================初始化IoTEdge服务=======================");
 		}catch (Exception ignored){
 
