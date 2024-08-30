@@ -55,8 +55,6 @@ public class ModbusUtils {
 
             // 创建子设备属性报告对象，包含所有设备的服务信息
             SubDevicesPropsReport report = new SubDevicesPropsReport(devices);
-            // 记录日志，输出报告内容
-            log.info("report:{}",JSON.toJSONString(report));
             // 使用IoT Edge工具类获取客户端，并上报子设备属性
             IoTEdgeUtil.getDriverClient().reportSubDevicesProperties(report);
         } catch (Exception e) {
