@@ -1,6 +1,9 @@
 package com.bsi.md.agent.log;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.bsi.framework.core.utils.ExceptionUtils;
+import com.bsi.utils.MongoDBUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,20 +18,31 @@ public class AgTaskLogOutput {
 
 
     public static void outputLog(AgTaskLog taskLog){
-        //示例 103.3.77.203 oa_org_hr oa推送组织到hr [2020-11-11 00:00:00] 0.000 sucess 10 8 -
-        task_log.info(
-                String.format("%s %s %s [%s] %s %s %s %s %s %s",
-                        taskLog.getClientIp(),
-                        taskLog.getTaskCode(),
-                        taskLog.getTaskName(),
-                        taskLog.getTimeLocal(),
-                        taskLog.getExecTime(),
-                        taskLog.getResult(),
-                        taskLog.getValidSize(),
-                        taskLog.getSuccessSize(),
-                        (taskLog.getValidSize()-taskLog.getSuccessSize()),
-                        taskLog.getErrorId()
-                )
-        );
+        try {
+            //1、输出到任务日志中
+            //示例 103.3.77.203 oa_org_hr oa推送组织到hr [2020-11-11 00:00:00] [2020-11-11 00:00:00] 1 sucess 10 8 -
+            task_log.info(
+                    String.format("%s %s %s %s %s [%s] [%s] %s %s %s %s %s %s",
+                            taskLog.getClientIp(),
+                            taskLog.getTraceId(),
+                            taskLog.getTaskCode(),
+                            taskLog.getTaskName(),
+                            taskLog.getExecType(),
+                            taskLog.getStartTime(),
+                            taskLog.getEndTime(),
+                            taskLog.getExecTime(),
+                            taskLog.getResult(),
+                            taskLog.getValidSize(),
+                            taskLog.getSuccessSize(),
+                            (taskLog.getValidSize()-taskLog.getSuccessSize()),
+                            taskLog.getErrorId()
+                    )
+            );
+            JSONArray arr = new JSONArray();
+            arr.add(taskLog);
+            MongoDBUtils.batchInsert(arr.toJSONString(),"task_run_log");
+        }catch (Exception e){
+            log.error("任务运行日志输出异常:{}", ExceptionUtils.getFullStackTrace(e));
+        }
     }
 }

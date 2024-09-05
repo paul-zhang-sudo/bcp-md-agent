@@ -204,7 +204,12 @@
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.1</version>
         </dependency>
-        
+
+        <!-- Spring Data MongoDB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
         <!--
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>

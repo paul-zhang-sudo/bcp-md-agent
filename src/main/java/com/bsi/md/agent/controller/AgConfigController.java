@@ -16,6 +16,7 @@ import com.bsi.md.agent.engine.integration.Context;
 import com.bsi.md.agent.entity.dto.*;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
 import com.bsi.md.agent.log.AgTaskLog;
+import com.bsi.md.agent.log.AgTaskLogOutput;
 import com.bsi.md.agent.service.AgConfigService;
 import com.bsi.md.agent.service.AgDataSourceService;
 import com.bsi.md.agent.service.AgJobService;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 配置修改api
@@ -324,9 +326,13 @@ public class AgConfigController {
     }
 
     private Resp repair(AgTaskParamDto param){
+        //初始化日志记录实体类
+        String errorId = UUID.randomUUID().toString().replaceAll("-","");
+        long startTime = System.currentTimeMillis();
         Resp resp = new Resp();
         String error = "";
         String result = "success";
+        AgTaskLog agTaskLog = null;
         try{
             //1、获取到执行规则
             AgIntegrationConfigVo config = JSON.parseObject( EHCacheUtil.getValue(AgConstant.AG_EHCACHE_JOB,param.getTaskId()).toString(),AgIntegrationConfigVo.class);
@@ -336,8 +342,9 @@ public class AgConfigController {
             }
             //配置日志参数，不同日志输出到不同文件
             MDC.put("taskId", config.getTaskName()+"-"+param.getTaskId()+"-repair");
-            long startTime = System.currentTimeMillis();
-            AgTaskLog agTaskLog = AgTaskLog.builder().taskName(config.getTaskName()+"(手动)").taskCode(param.getTaskId()).errorId("-").timeLocal( DateUtils.toString( DateUtils.now() ) ).build();
+            MDC.put("traceId", errorId);
+            agTaskLog = AgTaskLog.builder().taskName(config.getTaskName()).taskCode(config.getTaskId()).traceId(errorId).execType("手动").errorId("-").timeLocal( DateUtils.toString( DateUtils.now() ) ).build();
+            agTaskLog.setStartTime(com.bsi.utils.DateUtils.getDateStrFromTime(startTime, "yyyy-MM-dd HH:mm:ss.SSS"));
             info_log.info("====开始手动执行任务:{}====",param.getTaskId());
 
 
@@ -364,10 +371,21 @@ public class AgConfigController {
         }catch (Exception e){
             result = "failure";
             error = ExceptionUtils.getFullStackTrace( e );
+            if(agTaskLog!=null){
+                agTaskLog.setErrorId(errorId);
+            }
             info_log.error( "计划任务:{},执行失败,失败信息:{}" , param.getTaskId() ,error );
         }finally {
+            if(agTaskLog!=null){
+                long endTime = System.currentTimeMillis();
+                agTaskLog.setEndTime(com.bsi.utils.DateUtils.getDateStrFromTime(endTime, "yyyy-MM-dd HH:mm:ss.SSS"));
+                agTaskLog.setExecTime( String.valueOf( (endTime-startTime)/1000d ) );
+                agTaskLog.setResult( result );
+                AgTaskLogOutput.outputLog(agTaskLog);
+            }
             info_log.info( "====手动执行计划任务:{},执行结束,执行结果:{}====", param.getTaskId() , result );
             MDC.remove("taskId");
+            MDC.remove("traceId");
         }
         return resp;
     }

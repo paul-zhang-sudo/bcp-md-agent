@@ -51,7 +51,7 @@ public class AgApiProxyFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-
+        String errorId = UUID.randomUUID().toString().replaceAll("-","");
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
         response.setCharacterEncoding("utf-8");
@@ -61,6 +61,7 @@ public class AgApiProxyFilter implements Filter {
             return;
         }
         MDC.put("taskId", config.getTaskName()+"-"+config.getTaskId());
+        MDC.put("traceId", errorId);
         info_log.info("====开始调用{}====",config.getTaskName());
         JSONObject inputNode = config.getInputNode();
         //如果接口需要登录鉴权,则进行验证
@@ -106,7 +107,6 @@ public class AgApiProxyFilter implements Filter {
                 }
             }
         }catch(Exception e){
-            String errorId = UUID.randomUUID().toString();
             response.setStatus(FwHttpStatus.INTERNAL_SERVER_ERROR.value());
             Resp resp = new Resp();
             resp.setErrorCodeAndMsg(FwHttpStatus.INTERNAL_SERVER_ERROR.value(),"接口异常,异常id:"+errorId);
@@ -116,6 +116,7 @@ public class AgApiProxyFilter implements Filter {
         }finally {
             info_log.info("===={}调用完毕====",config.getTaskName());
             MDC.remove("taskId");
+            MDC.remove("traceId");
         }
 
 

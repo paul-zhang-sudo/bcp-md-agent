@@ -25,6 +25,10 @@ public class AgTaskLog {
     private int failSize; //失败条数
     private String errorId; //错误日志id
     private String lastTs;
+    private String startTime; //任务执行开始时间
+    private String endTime; //任务执行结束时间
+    private String traceId; //链路追踪id
+    private String execType; //执行方式 手动/自动
 
     public String getClientIp() {
         if( StringUtils.isEmpty(clientIp) ){
