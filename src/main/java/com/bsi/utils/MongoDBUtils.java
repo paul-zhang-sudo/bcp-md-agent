@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -132,7 +133,7 @@ public class MongoDBUtils {
         }).collect(Collectors.toList());
     }
 
-    public static List<Document> queryAndAggregate(JSONObject jsonFilter) {
+    public static List<Map> queryAndAggregate(JSONObject jsonFilter) {
 
         String collectionName = jsonFilter.getString("collectionName");
         String[] groupFields = jsonFilter.getString("groupFields").split(",");
@@ -157,7 +158,7 @@ public class MongoDBUtils {
         );
 
         // 执行聚合查询
-        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, collectionName, Document.class);
+        AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, collectionName,Map.class);
         return results.getMappedResults();
     }
 
