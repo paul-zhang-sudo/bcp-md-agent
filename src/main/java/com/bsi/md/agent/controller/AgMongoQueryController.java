@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * mongodb服务
@@ -29,7 +28,7 @@ public class AgMongoQueryController {
     }
 
     @PostMapping("/aggregate")
-    public List<Map> aggregate(@RequestBody JSONObject params) {
+    public List<Document> aggregate(@RequestBody JSONObject params) {
         return MongoDBUtils.queryAndAggregate(params);
     }
 

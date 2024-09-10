@@ -15,11 +15,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -29,7 +27,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
  * 用来操作系统自带的mongodb
  */
 public class MongoDBUtils {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private static final MongoTemplate mongoTemplate = FwSpringContextUtil.getBean("mongoTemplate",MongoTemplate.class);
     /**
      * 批量插入 JSON 数据到指定集合。
@@ -133,7 +130,7 @@ public class MongoDBUtils {
         }).collect(Collectors.toList());
     }
 
-    public static List<Map> queryAndAggregate(JSONObject jsonFilter) {
+    public static List<Document> queryAndAggregate(JSONObject jsonFilter) {
 
         String collectionName = jsonFilter.getString("collectionName");
         String[] groupFields = jsonFilter.getString("groupFields").split(",");
@@ -158,7 +155,7 @@ public class MongoDBUtils {
         );
 
         // 执行聚合查询
-        AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, collectionName,Map.class);
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, collectionName,Document.class);
         return results.getMappedResults();
     }
 
