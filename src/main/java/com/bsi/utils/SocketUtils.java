@@ -14,7 +14,8 @@ import java.util.HashMap;
 public class SocketUtils {
     private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     private static HashMap<String,SocketClient> clientMap = new HashMap<>();
-    private static HashMap<String,SocketServerN> serverMap = new HashMap<>();
+    private static HashMap<String,SocketServerN> serverMap = new HashMap<>(); //xcom协议socker服务器
+    private static HashMap<String,SimpleSocketServer> simpleServerMap = new HashMap<>(); //普通socket服务器
 
     /**
      * 生产socket客户端
@@ -64,13 +65,48 @@ public class SocketUtils {
     }
 
     /**
-     * 生产socket客户端
+     * 获取socket服务端
      * @param key
      * @return
      */
     public static SocketServerN getServer(String key){
         info_log.info("key:{}",key);
         SocketServerN server = serverMap.get(key);
+        info_log.info("server:{}",server);
+        return server;
+    }
+
+    /**
+     * 生产socket客户端
+     * @param key
+     * @param port
+     * @return
+     */
+    public static SimpleSocketServer createSimpleServer(String key,int port,int maxClient){
+        info_log.info("key:{},port:{}",key,port);
+        SimpleSocketServer server = simpleServerMap.get(key);
+        info_log.info("server:{}",server);
+        if(server==null){
+            info_log.info("server对象不存在,创建新的server对象");
+            server = new SimpleSocketServer();
+            try {
+                simpleServerMap.put(key,server);
+                server.start(port,maxClient);
+            }catch (Exception e) {
+                info_log.error("连接socket服务报错:{}", ExceptionUtils.getFullStackTrace(e));
+            }
+        }
+        return server;
+    }
+
+    /**
+     * 获取socket服务端
+     * @param key
+     * @return
+     */
+    public static SimpleSocketServer getSimpleServer(String key){
+        info_log.info("key:{}",key);
+        SimpleSocketServer server = simpleServerMap.get(key);
         info_log.info("server:{}",server);
         return server;
     }
