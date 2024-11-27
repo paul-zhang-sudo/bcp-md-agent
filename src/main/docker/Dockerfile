@@ -1,6 +1,9 @@
 FROM openjdk:8-jre-slim
 MAINTAINER fish
 
+# 安装Kerberos客户端和ping命令
+RUN apt-get update && apt-get install -y krb5-user iputils-ping
+
 ENV TZ=Asia/Shanghai
 ENV LD_LIBRARY_PATH /usr/local/lib:$LD_LIBRARY_PATH
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
