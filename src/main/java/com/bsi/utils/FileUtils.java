@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -22,9 +21,24 @@ public class FileUtils {
     private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     /**
+     * 读取文件到字符串
+     * @param path
+     * @param charsets
+     * @return String
+     */
+    public static String readFileToStr(String path,String charsets){
+        String result = "";
+        try{
+            result = org.apache.commons.io.FileUtils.readFileToString(new File(path), Charset.forName(charsets));
+        }catch (Exception e){
+            log.info("读取文件{}报错,错误信息:", ExceptionUtils.getFullStackTrace(e));
+        }
+        return result;
+    }
+    /**
      * 读取文件内容
      * @param path
-     * @return
+     * @return List<String>
      */
     public static List<String> readFile(String path){
         return readFileByCharset(path,"UTF-8");
