@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 public class AgAsynchronousApiPool {
 	public static ExecutorService apiPool = Executors.newFixedThreadPool(5);
 	public static ExecutorService singlePool = Executors.newSingleThreadExecutor();
+	private static final ExecutorService cachedPool = Executors.newCachedThreadPool();
 
 	public static void commit(Runnable task) {
 		apiPool.submit(task);
@@ -17,5 +18,9 @@ public class AgAsynchronousApiPool {
 
 	public static void commitSingle(Runnable task) {
 		singlePool.submit(task);
+	}
+
+	public static void commitCached(Runnable task) {
+		cachedPool.submit(task);
 	}
 }

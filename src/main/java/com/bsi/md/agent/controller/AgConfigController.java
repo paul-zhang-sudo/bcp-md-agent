@@ -13,6 +13,7 @@ import com.bsi.md.agent.engine.factory.AgEngineFactory;
 import com.bsi.md.agent.engine.integration.AgIntegrationEngine;
 import com.bsi.md.agent.engine.integration.AgTaskBootStrap;
 import com.bsi.md.agent.engine.integration.Context;
+import com.bsi.md.agent.engine.pool.AgAsynchronousApiPool;
 import com.bsi.md.agent.entity.dto.*;
 import com.bsi.md.agent.entity.vo.AgIntegrationConfigVo;
 import com.bsi.md.agent.log.AgTaskLog;
@@ -95,8 +96,15 @@ public class AgConfigController {
         }
         AgConfigDto c = transform(config);
         log.info("转换之后的配置信息:{}",JSON.toJSONString(c));
-
-        return updateConfig(c);
+        log.info("异步刷新配置数据");
+        AgAsynchronousApiPool.commitCached(() -> {
+            try {
+                updateConfig(c);
+            } catch (Exception e) {
+                log.error("异步执行updateConfig出错",e);
+            }
+        });
+        return new Resp( FwHttpStatus.OK.value(),"下发成功");
     }
 
     public Resp deleteConfig(AgConfigDtoForIOT config){
@@ -130,7 +138,15 @@ public class AgConfigController {
         if( FwHttpStatus.FORBIDDEN.value() == rs.getCode() ){
             return rs;
         }
-        return updateDataSource(ds);
+        log.info("异步初始化数据源");
+        AgAsynchronousApiPool.commitCached(() -> {
+            try {
+                updateDataSource(ds);
+            } catch (Exception e) {
+                log.error("异步执行updateDataSource出错",e);
+            }
+        });
+        return new Resp( FwHttpStatus.OK.value(),"下发成功");
     }
 
     /**

@@ -84,7 +84,7 @@ public class AgMqttTemplate implements AgDataSourceTemplate{
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
                     // 消息发布完成
-                    log.info("msg send success ...");
+                    //log.info("msg send success ...");
                 }
             });
         }catch (Exception e){
