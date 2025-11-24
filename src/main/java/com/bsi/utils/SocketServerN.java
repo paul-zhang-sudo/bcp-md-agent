@@ -34,7 +34,36 @@ public class SocketServerN {
         info_log.info("开始启动socket服务端,内网IP:{}，外网IP:{},端口号:{}", IpUtils.INTRANET_IP, IpUtils.INTERNET_IP, port);
         serverSocket = new ServerSocket(port);
         executor = createThreadPool(maxClient, port);
-        
+        try {
+            info_log.info("服务端启动，监听端口:{}", port);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                int count = clientCount.incrementAndGet();
+                clientSocket.setSoTimeout(120000); //设置超时时间
+                info_log.info("客户端连接，ip:{},port:{}", clientSocket.getInetAddress(), clientSocket.getPort());
+                info_log.info("count:{},maxClient:{}", count, maxClient);
+                if (maxClient >= count) {
+                    // 尝试提交客户端处理任务到线程池
+                    executor.execute(new ClientHandlerN(clientSocket, callBack,protocol));
+                    info_log.info("已接入第{}个客户端", count);
+                } else {
+                    info_log.info("只允许{}个客户端连接", maxClient);
+                    // 拒绝新连接，因为线程池已满
+                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                    out.println("客户端已满，没有空闲连接，请稍后再试。");
+                    out.flush();
+                    try {
+                        clientSocket.close();
+                    } catch (IOException ioException) {
+                        info_log.error("关闭客户端异常:{}", ExceptionUtils.getFullStackTrace(ioException));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            shutdownThreadPool(executor); // 关闭线程池
+        }
     }
 
     /**

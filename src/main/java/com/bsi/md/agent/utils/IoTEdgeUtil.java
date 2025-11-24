@@ -23,13 +23,16 @@ public class IoTEdgeUtil {
 
     static {
         try {
+            log.info("初始化itClient");
             itClient = ItClient.createFromEnv();
             itClient.open();
+            log.info("itClient初始化完毕");
         } catch (Exception e) {
             log.error("初始化itClient报错，错误信息:{}", ExceptionUtils.getFullStackTrace(e));
         }
 
         try {
+            log.info("初始化driverClient");
             driverClient = DriverClient.createFromEnv();
             driverClient.setGatewayCallback(new GatewayCallback() {
                 /**
@@ -97,6 +100,7 @@ public class IoTEdgeUtil {
                 }
             });
             driverClient.open();
+            log.info("driverClient初始化完毕");
         } catch (Exception e) {
             log.error("初始化driverClient报错，错误信息:{}", ExceptionUtils.getFullStackTrace(e));
         }
