@@ -17,7 +17,7 @@ public class DcClientUtils {
 
     private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
-    private DcClient getDcClient(){
+    private static DcClient getDcClient(){
         return FwSpringContextUtil.getBean("agDcDriver",AgDcDriver.class).getDcClient();
     }
 
@@ -26,7 +26,7 @@ public class DcClientUtils {
      * @param points
      * @return
      */
-    public boolean reportPoints(Map<String, Object> points) {
+    public static boolean reportPoints(Map<String, Object> points) {
         PointsReport report = new PointsReport();
         report.setPoints(points);
         try {
