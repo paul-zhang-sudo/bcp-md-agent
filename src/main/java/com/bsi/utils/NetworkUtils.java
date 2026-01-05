@@ -1,16 +1,12 @@
 package com.bsi.utils;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.util.Enumeration;
 import com.bsi.framework.core.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.*;
+import java.util.Enumeration;
 
 /**
  * 测试网络连通性工具类
@@ -77,10 +73,10 @@ public class NetworkUtils {
             socket.bind(localSocketAddr);
             InetSocketAddress endpointSocketAddr = new InetSocketAddress(remoteInetAddr, port);
             socket.connect(endpointSocketAddr, timeout);
-            info_log.info("SUCCESS - connection established! Local: "+ localInetAddr.getHostAddress() + " remote: "+ remoteInetAddr.getHostAddress() + " port" + port);
+            info_log.info("SUCCESS - connection established! Local: "+ localInetAddr.getHostAddress() + " remote: "+ remoteInetAddr.getHostAddress() + " port：" + port);
             isReachable = true;
         } catch (IOException e) {
-            info_log.error("FAILRE - CAN not connect! Local: "+ localInetAddr.getHostAddress() + " remote: "+ remoteInetAddr.getHostAddress() + " port" + port);
+            info_log.error("FAILRE - Unable to Connect! Local: "+ localInetAddr.getHostAddress() + " remote: "+ remoteInetAddr.getHostAddress() + " port：" + port);
         } finally {
             if (socket != null) {
                 try {

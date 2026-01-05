@@ -9,6 +9,9 @@ import jdk.nashorn.internal.objects.NativeArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 /**
  * sql语句执行工具类,支持对数据库的增删改查
  * @author fish
@@ -74,4 +77,110 @@ public class DBUtils {
         return template.getJdbcTemplate().batchUpdate(sql, list);
     }
 
+
+    // ===================== 以下为事务相关的方法 =====================
+    /* 调用示例：
+     DBUtils.beginTransaction(dataSource);
+     try {
+        // 执行批量更新1
+        ……
+        // 执行批量更新2
+        ……
+        // 提交事务
+        DBUtils.commitTransaction(dataSource);
+     } catch (e) {
+        // 出现错误，回滚事务
+        DBUtils.rollbackTransaction(dataSource);
+        throw e;
+     }
+     */
+
+    /**
+     * 开始事务
+     * @param dataSourceId 数据源id
+     */
+    public static void startTransaction(String dataSourceId) {
+        AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
+        if (template == null || template.getJdbcTemplate().getDataSource() == null) {
+            throw new RuntimeException("DataSource or JdbcTemplate is not initialized.");
+        }
+
+        try {
+            Connection connection = template.getJdbcTemplate().getDataSource().getConnection();
+            if (connection == null) {
+                throw new RuntimeException("Failed to obtain a connection from the data source.");
+            }
+            connection.setAutoCommit(false);  // 禁用自动提交
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to start transaction: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 提交事务
+     * @param dataSourceId 数据源id
+     */
+    public static void commitTransaction(String dataSourceId) {
+        AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
+        if (template == null || template.getJdbcTemplate().getDataSource() == null) {
+            throw new RuntimeException("DataSource or JdbcTemplate is not initialized.");
+        }
+
+        try {
+            Connection connection = template.getJdbcTemplate().getDataSource().getConnection();
+            if (connection == null) {
+                throw new RuntimeException("Failed to obtain a connection from the data source.");
+            }
+            connection.commit();  // 提交事务
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackTransaction(dataSourceId); // 如果提交失败则回滚
+            throw new RuntimeException("Failed to commit transaction: " + e.getMessage(), e);
+        } finally {
+            try {
+                Connection connection = template.getJdbcTemplate().getDataSource().getConnection();
+                if (connection != null) {
+                    connection.setAutoCommit(true);  // 恢复自动提交模式
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 回滚事务
+     * @param dataSourceId 数据源id
+     */
+    public static void rollbackTransaction(String dataSourceId) {
+        AgJdbcTemplate template = AgDatasourceContainer.getJdbcDataSource(dataSourceId);
+        if (template == null || template.getJdbcTemplate().getDataSource() == null) {
+            throw new RuntimeException("DataSource or JdbcTemplate is not initialized.");
+        }
+
+        try {
+            Connection connection = template.getJdbcTemplate().getDataSource().getConnection();
+            if (connection == null) {
+                throw new RuntimeException("Failed to obtain a connection from the data source.");
+            }
+            connection.rollback();  // 回滚事务
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to rollback transaction: " + e.getMessage(), e);
+        } finally {
+            try {
+                Connection connection = template.getJdbcTemplate().getDataSource().getConnection();
+                if (connection != null) {
+                    connection.setAutoCommit(true);  // 恢复自动提交模式
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
 }
+
