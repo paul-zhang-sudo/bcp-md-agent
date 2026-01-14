@@ -13,11 +13,11 @@ import javax.script.*;
 
 public class AgJavaScriptEngine implements AgScriptEngine{
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
 //    private static AgJavaScriptEngine instance = null;
 
-    private ScriptEngine engine;
+    private final ScriptEngine engine;
 
     /**
      * 返回单例

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * 通用输入节点（脚本）
  */
 public class AgCommonInput implements AgInput{
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     //脚本
     protected String script;
     //执行引擎

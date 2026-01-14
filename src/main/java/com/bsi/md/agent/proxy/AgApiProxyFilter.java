@@ -43,7 +43,7 @@ import java.util.UUID;
 @Slf4j
 @WebFilter(filterName="agApiProxyFilter",urlPatterns="/*")
 public class AgApiProxyFilter implements Filter {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

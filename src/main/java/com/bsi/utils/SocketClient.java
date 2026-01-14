@@ -18,7 +18,7 @@ public class SocketClient {
     private BufferedWriter writer;
     private InputStream reader;
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     public void connect(String host, int port) throws Exception {
         info_log.info("开始连接socket服务器,地址：{}，端口号:{}",host,port);

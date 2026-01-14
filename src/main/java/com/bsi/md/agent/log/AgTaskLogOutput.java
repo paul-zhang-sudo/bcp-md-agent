@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class AgTaskLogOutput {
 
-    private static Logger task_log = LoggerFactory.getLogger("TASK_RUN_LOG");
+    private static final Logger task_log = LoggerFactory.getLogger("TASK_RUN_LOG");
 
 
     public static void outputLog(AgTaskLog taskLog){

@@ -250,10 +250,10 @@ public class MongoDBUtils {
                     criteria.and(field).lte(value);
                     break;
                 case "in":
-                    criteria.and(field).in((Iterable<?>) value);
+                    criteria.and(field).in(value);
                     break;
                 case "nin":
-                    criteria.and(field).nin((Iterable<?>) value);
+                    criteria.and(field).nin(value);
                     break;
                 case "exists":
                     criteria.and(field).exists((Boolean) value);

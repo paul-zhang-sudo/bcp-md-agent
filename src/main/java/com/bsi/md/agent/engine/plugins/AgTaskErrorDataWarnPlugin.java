@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 @Component
 public class AgTaskErrorDataWarnPlugin implements AgAfterOutputPlugin{
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
-    private static Pattern dynamicLimitCount = Pattern.compile("\\$\\{([A-Za-z0-9]+)\\}");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Pattern dynamicLimitCount = Pattern.compile("\\$\\{([A-Za-z0-9]+)\\}");
 
     @Override
     public void handlerMsg(Context context) {

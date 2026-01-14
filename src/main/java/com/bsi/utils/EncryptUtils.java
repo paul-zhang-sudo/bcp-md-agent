@@ -68,8 +68,8 @@ public class EncryptUtils {
 		}else {
 			iv = IVStr.getBytes();
 		}
-		Cipher cipher = Cipher.getInstance(ALGORITHM_AES_GCM_NP);;
-		SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), ALGORITHM_AES);// secretKey 是同步参数配置的加密秘钥
+		Cipher cipher = Cipher.getInstance(ALGORITHM_AES_GCM_NP);
+        SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), ALGORITHM_AES);// secretKey 是同步参数配置的加密秘钥
 		GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128,iv);
 		cipher.init(Cipher.ENCRYPT_MODE, key, gcmParameterSpec);
 		byte[] bytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));

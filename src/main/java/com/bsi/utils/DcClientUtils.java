@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class DcClientUtils {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     private static DcClient getDcClient(){
         return FwSpringContextUtil.getBean("agDcDriver",AgDcDriver.class).getDcClient();

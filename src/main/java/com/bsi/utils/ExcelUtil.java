@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelUtil {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
-    private static NumberFormat numberFormat;
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final NumberFormat numberFormat;
 
     static {
         numberFormat = NumberFormat.getNumberInstance();

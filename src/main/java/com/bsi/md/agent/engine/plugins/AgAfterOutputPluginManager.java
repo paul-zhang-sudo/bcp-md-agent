@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class AgAfterOutputPluginManager {
     //插件列表
-    private static Map<String,AgAfterOutputPlugin> pluginsMap;
+    private static final Map<String,AgAfterOutputPlugin> pluginsMap;
 
     static {
         pluginsMap =  FwSpringContextUtil.getApplicationContext().getBeansOfType(AgAfterOutputPlugin.class);

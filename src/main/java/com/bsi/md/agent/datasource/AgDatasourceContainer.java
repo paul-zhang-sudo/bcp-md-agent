@@ -11,14 +11,14 @@ import java.util.Map;
  * @author fish
  */
 public class AgDatasourceContainer {
-    private static Map<String,AgJdbcTemplate> jdbcMap = new HashMap<>();
-    private static Map<String, AgApiTemplate> apiMap = new HashMap<>();
-    private static Map<String, AgApiUpTemplate> apiUpMap = new HashMap<>();
-    private static Map<String, AgSapRFCTemplate> sapRfcMap = new HashMap<>();
-    private static Map<String, JSONObject> propertiesMap = new HashMap<>();
-    private static Map<String, AgKafkaTemplate> kafkaMap = new HashMap<>();
-    private static Map<String, AgPulsarTemplate> pulsarMap = new HashMap<>();
-    private static Map<String, AgMqttTemplate> mqttMap = new HashMap<>();
+    private static final Map<String,AgJdbcTemplate> jdbcMap = new HashMap<>();
+    private static final Map<String, AgApiTemplate> apiMap = new HashMap<>();
+    private static final Map<String, AgApiUpTemplate> apiUpMap = new HashMap<>();
+    private static final Map<String, AgSapRFCTemplate> sapRfcMap = new HashMap<>();
+    private static final Map<String, JSONObject> propertiesMap = new HashMap<>();
+    private static final Map<String, AgKafkaTemplate> kafkaMap = new HashMap<>();
+    private static final Map<String, AgPulsarTemplate> pulsarMap = new HashMap<>();
+    private static final Map<String, AgMqttTemplate> mqttMap = new HashMap<>();
 
     /**
      * 获取数据源属性

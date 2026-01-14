@@ -33,7 +33,7 @@ import java.util.Map.Entry;
 @Slf4j
 public class XmlUtils {
 
-    private static XStream xmlStream = new XStream(new Dom4JDriver(new XmlFriendlyNameCoder("_","_","_")));
+    private static final XStream xmlStream = new XStream(new Dom4JDriver(new XmlFriendlyNameCoder("_","_","_")));
 
     static {
         xmlStream.registerConverter( new MapEntryConverter());

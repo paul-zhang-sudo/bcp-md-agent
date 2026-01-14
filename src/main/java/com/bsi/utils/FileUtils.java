@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class FileUtils {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     /**
      * 读取文件到字符串

@@ -12,10 +12,10 @@ import java.util.HashMap;
  */
 @Slf4j
 public class SocketUtils {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
-    private static HashMap<String,SocketClient> clientMap = new HashMap<>();
-    private static HashMap<String,SocketServerN> serverMap = new HashMap<>(); //xcom协议socker服务器
-    private static HashMap<String,SimpleSocketServer> simpleServerMap = new HashMap<>(); //普通socket服务器
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final HashMap<String,SocketClient> clientMap = new HashMap<>();
+    private static final HashMap<String,SocketServerN> serverMap = new HashMap<>(); //xcom协议socker服务器
+    private static final HashMap<String,SimpleSocketServer> simpleServerMap = new HashMap<>(); //普通socket服务器
 
     /**
      * 生产socket客户端

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 @Slf4j
 public class DbfUtils {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     public static List<Map<String, Object>> readDbf(String filePath,String charSet,int skipRecords) {
         File dbfFile = new File(filePath);

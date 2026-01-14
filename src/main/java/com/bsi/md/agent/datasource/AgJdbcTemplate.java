@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * @author fish
  */
 public class AgJdbcTemplate extends FwService {
-	private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+	private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 	protected AbstractHelperDialect autoDialect = null;
 	private FwJdbcTemplate jdbcTemplate = null;
 	private String dialect = null;
@@ -150,7 +150,7 @@ public class AgJdbcTemplate extends FwService {
 		if( count<=0 ){
 			return new PageResp<T>();
 		}
-		int pageCount = (int) (count / pageSize);
+		int pageCount = count / pageSize;
 		res.setPageSize(pageSize);
 		res.setTotalPage(pageCount);
 		res.setCurrentPage(currentPage);

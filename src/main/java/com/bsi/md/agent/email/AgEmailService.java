@@ -22,7 +22,7 @@ public class AgEmailService {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 		simpleMailMessage.setFrom(javaMailSenderImpl.getJavaMailProperties().getProperty("bcp.mail.from"));
 		String receiver = email.getReceiver();
-		String receivers[] = receiver.split(";");
+		String[] receivers = receiver.split(";");
 		simpleMailMessage.setTo(receivers);
 		simpleMailMessage.setSubject(email.getSubject());
 		simpleMailMessage.setText(email.getContent());

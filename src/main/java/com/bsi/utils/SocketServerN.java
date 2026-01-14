@@ -117,7 +117,7 @@ public class SocketServerN {
         if (executor == null) {
             return;
         }
-        ((ThreadPoolExecutor) executor).shutdown(); // 调用shutdown开始关闭过程
+        executor.shutdown(); // 调用shutdown开始关闭过程
         try {
             if (!executor.awaitTermination(60, TimeUnit.SECONDS)) { // 等待最多60秒
                 executor.shutdownNow(); // 强制关闭未完成的任务
@@ -129,12 +129,12 @@ public class SocketServerN {
     }
 
     class ClientHandlerN implements Runnable {
-        private LinkedList<String> msgList = new LinkedList<>();
+        private final LinkedList<String> msgList = new LinkedList<>();
         private BufferedWriter out = null;
         private InputStream in = null;
         private Socket clientSocket;
-        private Boolean callback;
-        private String protocol; //协议
+        private final Boolean callback;
+        private final String protocol; //协议
         public ClientHandlerN(Socket clientSocket,boolean callback,String protocol) {
             this.clientSocket = clientSocket;
             this.callback = callback;

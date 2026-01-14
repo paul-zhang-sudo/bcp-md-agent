@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class SHA256Utils {
 
-	private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+	private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
 	public static String getSHA256(String str,String digest) {
 		MessageDigest messageDigest;

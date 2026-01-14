@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AgTaskBootStrap {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     private AgIntegrationEngine engine;
 
@@ -52,8 +52,8 @@ public class AgTaskBootStrap {
      */
     public Object exec() throws Exception{
         info_log.debug("1.执行输入节点");
-        boolean apiFlag = context.get("api-flag")==null?false:true;
-        boolean repairFlag = context.get("repair-flag")==null?false:true;
+        boolean apiFlag = context.get("api-flag") != null;
+        boolean repairFlag = context.get("repair-flag") != null;
         //当前时间的毫秒数
         String ts = System.currentTimeMillis()+"";
         //上次运行成功的毫秒数
@@ -78,7 +78,7 @@ public class AgTaskBootStrap {
         Object result = engine.output(context);
         info_log.debug("4.设置成功处理数据时间");
         //如果不是api上报、并且不是补数、并且有效数量大于0条则设置成功时间
-        boolean successFlag = context.getResultLog()==null ? false : context.getResultLog().getValidSize()>0 ;
+        boolean successFlag = context.getResultLog() != null && context.getResultLog().getValidSize() > 0;
         if( !apiFlag && !repairFlag && successFlag ){
             //如果手动设置了lastts，则取手动设置的值
             AgTaskLog taskLog = context.getResultLog();

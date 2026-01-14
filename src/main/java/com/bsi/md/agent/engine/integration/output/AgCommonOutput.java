@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * 通用输出节点
  */
 public class AgCommonOutput implements AgOutput{
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     //脚本
     protected String script;
 

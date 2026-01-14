@@ -12,7 +12,7 @@ import java.util.*;
  * 微软Access数据库工具类
  */
 public class AccessUtils {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     public static Object query(String filePath,String sql,String password) {
         List<Map> arr = new ArrayList<>();
         Connection conn = null;

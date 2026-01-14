@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     /**
      * 通过restTemplate请求数据

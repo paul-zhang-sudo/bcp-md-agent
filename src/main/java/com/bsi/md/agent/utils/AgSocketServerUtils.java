@@ -12,7 +12,7 @@ public class AgSocketServerUtils {
     private static final String PROTOCOL_XGGY = "XGGY"; //湘钢规约
     private static final String PROTOCOL_JTGY = "JTGY"; //静态规约
 
-    private static Map<String,Byte> delimiterMap = ImmutableMap.of(PROTOCOL_XGGY,MSG_DELIMITER_00,PROTOCOL_JTGY,MGS_DELIMITER_0a);
+    private static final Map<String,Byte> delimiterMap = ImmutableMap.of(PROTOCOL_XGGY,MSG_DELIMITER_00,PROTOCOL_JTGY,MGS_DELIMITER_0a);
 
     public static String stringToHex(String inputStr) {
         StringBuilder hexBuilder = new StringBuilder();
@@ -68,19 +68,17 @@ public class AgSocketServerUtils {
     }
 
     private static String handleXGGY(String msgNo,String strDate,String clientNo,String serverNo){
-        StringBuilder callBackMsg = new StringBuilder();
-        callBackMsg.append("0041").append("999998").append(strDate.substring(0,8));
-        callBackMsg.append(strDate.substring(8,14)).append(serverNo).append(clientNo).append("0000").append(AgSocketServerUtils.spaceX(8));
-        callBackMsg.append(AgSocketServerUtils.hexToString("00"));
-        return callBackMsg.toString();
+        String callBackMsg = "0041" + "999998" + strDate.substring(0, 8) +
+                strDate.substring(8, 14) + serverNo + clientNo + "0000" + AgSocketServerUtils.spaceX(8) +
+                AgSocketServerUtils.hexToString("00");
+        return callBackMsg;
     }
 
     private static String handleJTGY(String msgNo,String strDate,String clientNo,String serverNo){
-        StringBuilder callBackMsg = new StringBuilder();
-        callBackMsg.append("0110").append(msgNo).append(strDate.substring(0,8));
-        callBackMsg.append(strDate.substring(8,14)).append(serverNo).append(clientNo).append("A").append(AgSocketServerUtils.spaceX(80));
-        callBackMsg.append(AgSocketServerUtils.hexToString("0a"));
-        return callBackMsg.toString();
+        String callBackMsg = "0110" + msgNo + strDate.substring(0, 8) +
+                strDate.substring(8, 14) + serverNo + clientNo + "A" + AgSocketServerUtils.spaceX(80) +
+                AgSocketServerUtils.hexToString("0a");
+        return callBackMsg;
     }
 
 

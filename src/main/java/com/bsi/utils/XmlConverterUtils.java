@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * xml转换工具类
  */
 public class XmlConverterUtils {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     /**
      * 把xml转换成json字符串

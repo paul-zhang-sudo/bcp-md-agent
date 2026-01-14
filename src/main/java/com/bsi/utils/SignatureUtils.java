@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 /**
@@ -27,7 +28,7 @@ import java.util.Enumeration;
  */
 public class SignatureUtils {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     /**
      * sm3加密
@@ -37,7 +38,7 @@ public class SignatureUtils {
     public static String sm3Signature(String body) {
         try {
             SM3Digest sm3Digest = new SM3Digest();
-            sm3Digest.update(body.getBytes("UTF-8"), 0, body.getBytes("UTF-8").length);
+            sm3Digest.update(body.getBytes(StandardCharsets.UTF_8), 0, body.getBytes(StandardCharsets.UTF_8).length);
             byte[] ret = new byte[sm3Digest.getDigestSize()];
             sm3Digest.doFinal(ret, 0);
             return Hex.toHexString(ret);
@@ -49,13 +50,13 @@ public class SignatureUtils {
 
     public static String sm2Signature(String privateKeyStr, String dataStr) throws CryptoException, IOException {
         byte[] key = Hex.decode(privateKeyStr);
-        byte[] data = dataStr.getBytes("UTF-8");
+        byte[] data = dataStr.getBytes(StandardCharsets.UTF_8);
         ECNamedCurveParameterSpec eCNamedCurveParameterSpec = ECNamedCurveTable.getParameterSpec("sm2p256v1");
         ECDomainParameters domainParameters = new ECDomainParameters(eCNamedCurveParameterSpec.getCurve(), eCNamedCurveParameterSpec.getG(), eCNamedCurveParameterSpec.getN(), eCNamedCurveParameterSpec.getH(), eCNamedCurveParameterSpec.getSeed());
         ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters(new BigInteger(1, key), domainParameters);
-        ParametersWithID parameters = new ParametersWithID((CipherParameters) privateKey, "1234567812345678".getBytes());
+        ParametersWithID parameters = new ParametersWithID(privateKey, "1234567812345678".getBytes());
         SM2Signer signer = new SM2Signer();
-        signer.init(true, (CipherParameters)parameters);
+        signer.init(true, parameters);
         signer.update(data, 0, data.length);
         try{
             return Hex.toHexString(decodeDERSignature(signer.generateSignature()));
@@ -69,8 +70,8 @@ public class SignatureUtils {
         ASN1InputStream stream = new ASN1InputStream(new ByteArrayInputStream(signature));
         ASN1Sequence primitive = (ASN1Sequence)stream.readObject();
         Enumeration<ASN1Integer> enumeration = primitive.getObjects();
-        BigInteger R = ((ASN1Integer)enumeration.nextElement()).getValue();
-        BigInteger S = ((ASN1Integer)enumeration.nextElement()).getValue();
+        BigInteger R = enumeration.nextElement().getValue();
+        BigInteger S = enumeration.nextElement().getValue();
         byte[] bytes = new byte[64];
         byte[] r = format(R.toByteArray());
         byte[] s = format(S.toByteArray());

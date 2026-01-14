@@ -15,7 +15,7 @@ import java.util.Base64;
  */
 public class AESUtils {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     public static String encrypt(String plainText,String key,String iv){
         String res ="";
         try{

@@ -10,7 +10,7 @@ import java.util.Map;
  * 执行引擎池
  */
 public class AgExecEnginePool {
-    private static Map<String, AgScriptEngine> engineMapMap = new HashMap<>();
+    private static final Map<String, AgScriptEngine> engineMapMap = new HashMap<>();
 
     /**
      * 添加一个执行引擎

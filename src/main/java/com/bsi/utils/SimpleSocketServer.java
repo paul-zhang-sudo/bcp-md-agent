@@ -118,7 +118,7 @@ public class SimpleSocketServer {
         if (executor == null) {
             return;
         }
-        ((ThreadPoolExecutor) executor).shutdown(); // 调用shutdown开始关闭过程
+        executor.shutdown(); // 调用shutdown开始关闭过程
         try {
             if (!executor.awaitTermination(60, TimeUnit.SECONDS)) { // 等待最多60秒
                 executor.shutdownNow(); // 强制关闭未完成的任务

@@ -14,7 +14,7 @@ import java.util.Enumeration;
 
 public class NetworkUtils {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
 
     /**
      * 测试localIp能否与远程的主机指定端口建立连接相连

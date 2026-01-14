@@ -16,7 +16,7 @@ import java.util.List;
  * 42号文工具类
  */
 public class P42Utils {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     private static final String LINE_DELIMITER = "~";
     private static final String FIELD_DELIMITER = ";";
     private static final String EOF_MARKER = "||";

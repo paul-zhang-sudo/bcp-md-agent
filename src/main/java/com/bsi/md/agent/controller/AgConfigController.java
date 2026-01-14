@@ -50,7 +50,7 @@ import java.util.UUID;
 @RequestMapping(value = "/api")
 public class AgConfigController {
 
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     @Autowired
     private AgDataSourceService agDataSourceService;
     @Autowired

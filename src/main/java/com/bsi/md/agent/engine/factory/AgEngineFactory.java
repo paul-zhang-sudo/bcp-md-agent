@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author fish
  */
 public class AgEngineFactory {
-    private static Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
+    private static final Logger info_log = LoggerFactory.getLogger("TASK_INFO_LOG");
     /**
      * 获取定时执行引擎
      * @param config

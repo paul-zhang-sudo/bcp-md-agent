@@ -7,7 +7,7 @@ import java.security.KeyPair;
  */
 public class KeyPairs {
 
-	private KeyPair keyPair;
+	private final KeyPair keyPair;
 	
 	public KeyPairs(KeyPair keyPair){
 		this.keyPair = keyPair;

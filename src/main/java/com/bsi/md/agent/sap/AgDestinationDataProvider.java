@@ -17,7 +17,7 @@ import java.util.Properties;
 public  class AgDestinationDataProvider implements DestinationDataProvider
 {
         private DestinationDataEventListener eL;
-        private HashMap<String, Properties> secureDBStorage = new HashMap<String, Properties>();
+        private final HashMap<String, Properties> secureDBStorage = new HashMap<String, Properties>();
         
         public Properties getDestinationProperties(String destinationName)
         {
